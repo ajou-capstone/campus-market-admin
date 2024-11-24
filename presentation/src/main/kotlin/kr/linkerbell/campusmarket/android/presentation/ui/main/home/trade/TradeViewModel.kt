@@ -13,16 +13,16 @@ import kotlinx.coroutines.flow.catch
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.EventFlow
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.asEventFlow
-import kr.linkerbell.campusmarket.android.domain.model.feature.trade.SummarizedTrade
+import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Trade
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.error.ServerException
-import kr.linkerbell.campusmarket.android.domain.usecase.feature.trade.SearchTradeListUseCase
+import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.SearchTradeUseCase
 import kr.linkerbell.campusmarket.android.presentation.common.base.BaseViewModel
 import kr.linkerbell.campusmarket.android.presentation.common.base.ErrorEvent
 
 @HiltViewModel
 class TradeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val searchTradeListUseCase: SearchTradeListUseCase
+    private val searchTradeUseCase: SearchTradeUseCase
 ) : BaseViewModel() {
 
     private val _state: MutableStateFlow<TradeScreenState> = MutableStateFlow(TradeScreenState.Init)
@@ -31,9 +31,9 @@ class TradeViewModel @Inject constructor(
     private val _event: MutableEventFlow<TradeScreenEvent> = MutableEventFlow()
     val event: EventFlow<TradeScreenEvent> = _event.asEventFlow()
 
-    private val _summarizedTradeList: MutableStateFlow<PagingData<SummarizedTrade>> =
+    private val _summarizedTradeList: MutableStateFlow<PagingData<Trade>> =
         MutableStateFlow(PagingData.empty())
-    val summarizedTradeList: StateFlow<PagingData<SummarizedTrade>> =
+    val summarizedTradeList: StateFlow<PagingData<Trade>> =
         _summarizedTradeList.asStateFlow()
 
     init {
@@ -53,7 +53,7 @@ class TradeViewModel @Inject constructor(
     }
 
     private suspend fun searchTradeList() {
-        searchTradeListUseCase(
+        searchTradeUseCase(
             name = "",
             category = "",
             minPrice = 0,

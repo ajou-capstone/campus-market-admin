@@ -15,13 +15,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -52,18 +50,16 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.plus
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
-import kr.linkerbell.campusmarket.android.domain.model.feature.trade.SummarizedTrade
+import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Trade
 import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue100
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue200
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue400
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Body1
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Caption2
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline3
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space20
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space24
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Space32
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space56
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.ErrorObserver
@@ -73,7 +69,6 @@ import kr.linkerbell.campusmarket.android.presentation.common.view.RippleBox
 import kr.linkerbell.campusmarket.android.presentation.common.view.image.PostImage
 import kr.linkerbell.campusmarket.android.presentation.common.view.textfield.TypingTextField
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.info.TradeInfoConstant
-import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.post.TradePostConstant
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.search.TradeSearchConstant
 
 @Composable
@@ -191,37 +186,6 @@ private fun TradeScreen(
                 )
             }
         }
-
-        Box(
-            modifier = Modifier
-                .padding(Space20)
-                .constrainAs(button) {
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                }
-        ) {
-            FloatingActionButton(
-                modifier = Modifier.size(Space56),
-                shape = CircleShape,
-                containerColor = Blue400,
-                onClick = {
-                    val postRoute = makeRoute(
-                        route = TradePostConstant.ROUTE,
-                        arguments = mapOf(
-                            TradePostConstant.ROUTE_ARGUMENT_ITEM_ID to "-1"
-                        )
-                    )
-                    navController.navigate(postRoute)
-                }
-            ) {
-                Icon(
-                    modifier = Modifier.size(Space32),
-                    painter = painterResource(id = R.drawable.ic_plus),
-                    contentDescription = null,
-                    tint = White
-                )
-            }
-        }
     }
 
     LaunchedEffectWithLifecycle(coroutineContext) {
@@ -231,7 +195,7 @@ private fun TradeScreen(
 
 @Composable
 private fun TradeItemCard(
-    item: SummarizedTrade,
+    item: Trade,
     onItemCardClicked: (Long) -> Unit
 ) {
     Box(
@@ -392,7 +356,7 @@ private fun TradeScreenPreview() {
             summarizedTradeList = MutableStateFlow(
                 PagingData.from(
                     listOf(
-                        SummarizedTrade(
+                        Trade(
                             itemId = 1L,
                             userId = 1L,
                             nickname = "장성혁",
@@ -402,7 +366,10 @@ private fun TradeScreenPreview() {
                             chatCount = 5,
                             likeCount = 2,
                             itemStatus = "",
-                            isLiked = true
+                            isLiked = true,
+                            campusId = 1215,
+                            campusRegion = "luptatum",
+                            universityName = "Theresa Kaufman",
                         )
                     )
                 )
