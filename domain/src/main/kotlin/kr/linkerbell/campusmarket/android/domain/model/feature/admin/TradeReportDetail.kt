@@ -1,6 +1,6 @@
-package kr.linkerbell.campusmarket.android.domain.usecase.feature.admin
+package kr.linkerbell.campusmarket.android.domain.model.feature.admin
 
-data class TradeReport(
+data class TradeReportDetail(
     val category: String,
     val description: String,
     val isCompleted: Boolean,

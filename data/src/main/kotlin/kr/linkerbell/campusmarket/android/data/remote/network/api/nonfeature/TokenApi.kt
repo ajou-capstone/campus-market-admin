@@ -25,11 +25,10 @@ class TokenApi @Inject constructor(
         idToken: String,
         firebaseToken: String
     ): Result<LoginRes> {
-        return noAuthClient.post("$baseUrl/api/v1/auth/login") {
+        return noAuthClient.post("$baseUrl/admin/api/v1/login") {
             setBody(
                 LoginReq(
-                    idToken = idToken,
-                    firebaseToken = firebaseToken
+                    idToken = idToken
                 )
             )
         }.convert(errorMessageMapper::map)

@@ -6,7 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LoginReq(
     @SerialName("idToken")
-    val idToken: String,
-    @SerialName("firebaseToken")
-    val firebaseToken: String
+    val idToken: String
 )

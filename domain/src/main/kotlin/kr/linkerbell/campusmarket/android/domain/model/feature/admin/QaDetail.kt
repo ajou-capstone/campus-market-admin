@@ -1,4 +1,4 @@
-package kr.linkerbell.campusmarket.android.domain.usecase.feature.admin
+package kr.linkerbell.campusmarket.android.domain.model.feature.admin
 
 data class QaDetail(
     val category: String,

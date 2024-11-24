@@ -18,7 +18,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "campusmarket"
+rootProject.name = "campusmarket-admin"
 include(":app")
 include(":common")
 include(":presentation")
