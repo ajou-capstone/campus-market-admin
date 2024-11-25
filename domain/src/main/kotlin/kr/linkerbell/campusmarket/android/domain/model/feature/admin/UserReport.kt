@@ -4,7 +4,7 @@ data class UserReport(
     val category: String,
     val description: String,
     val isCompleted: Boolean,
-    val itemId: Long,
-    val itemReportId: Long,
-    val userId: Long
+    val targetId: Long,
+    val userId: Long,
+    val userReportId: Long
 )

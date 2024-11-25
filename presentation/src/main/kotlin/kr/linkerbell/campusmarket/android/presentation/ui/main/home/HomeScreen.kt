@@ -38,6 +38,8 @@ import kr.linkerbell.campusmarket.android.presentation.common.theme.Space56
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.qa.QaScreen
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.TradeScreen
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.tradereport.TradeReportScreen
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.userreport.UserReportScreen
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -80,6 +82,14 @@ fun HomeScreen(
 
                 HomeType.Qa -> {
                     QaScreen(navController = navController)
+                }
+
+                HomeType.TradeReport -> {
+                    TradeReportScreen(navController = navController)
+                }
+
+                HomeType.UserReport -> {
+                    UserReportScreen(navController = navController)
                 }
 
                 null -> Unit

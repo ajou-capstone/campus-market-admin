@@ -6,6 +6,8 @@ import kotlinx.parcelize.Parcelize
 import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.qa.QaConstant
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.TradeConstant
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.tradereport.TradeReportConstant
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.userreport.UserReportConstant
 
 @Parcelize
 sealed class HomeType(
@@ -22,12 +24,24 @@ sealed class HomeType(
     @Parcelize
     data object Qa : HomeType(
         route = QaConstant.ROUTE,
-        iconRes = R.drawable.ic_chat
+        iconRes = R.drawable.ic_menu
+    )
+
+    @Parcelize
+    data object TradeReport : HomeType(
+        route = TradeReportConstant.ROUTE,
+        iconRes = R.drawable.ic_menu
+    )
+
+    @Parcelize
+    data object UserReport : HomeType(
+        route = UserReportConstant.ROUTE,
+        iconRes = R.drawable.ic_menu
     )
 
     companion object {
         fun values(): List<HomeType> {
-            return listOf(Trade, Qa)
+            return listOf(Trade, Qa, TradeReport, UserReport)
         }
     }
 }

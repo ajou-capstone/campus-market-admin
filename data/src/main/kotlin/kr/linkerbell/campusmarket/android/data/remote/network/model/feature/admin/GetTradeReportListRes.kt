@@ -29,21 +29,21 @@ data class GetTradeReportListItemRes(
     val description: String,
     @SerialName("isCompleted")
     val isCompleted: Boolean,
-    @SerialName("targetId")
-    val targetId: Long,
+    @SerialName("itemId")
+    val itemId: Long,
+    @SerialName("itemReportId")
+    val itemReportId: Long,
     @SerialName("userId")
-    val userId: Long,
-    @SerialName("userReportId")
-    val userReportId: Long
+    val userId: Long
 ) : DataMapper<TradeReport> {
     override fun toDomain(): TradeReport {
         return TradeReport(
             category = category,
             description = description,
             isCompleted = isCompleted,
-            targetId = targetId,
-            userId = userId,
-            userReportId = userReportId
+            itemId = itemId,
+            itemReportId = itemReportId,
+            userId = userId
         )
     }
 }
