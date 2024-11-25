@@ -23,8 +23,8 @@ import kr.linkerbell.campusmarket.android.common.util.coroutine.event.eventObser
 import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline1
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.HomeConstant
 import kr.linkerbell.campusmarket.android.presentation.ui.main.nonlogin.NonLoginConstant
-import kr.linkerbell.campusmarket.android.presentation.ui.main.nonlogin.entry.EntryConstant
 
 @Composable
 fun SplashScreen(
@@ -34,8 +34,8 @@ fun SplashScreen(
     val (state, event, intent, logEvent, coroutineContext) = argument
     val scope = rememberCoroutineScope() + coroutineContext
 
-    fun navigateToEntry() {
-        navController.navigate(EntryConstant.ROUTE) {
+    fun navigateToHome() {
+        navController.navigate(HomeConstant.ROUTE) {
             popUpTo(SplashConstant.ROUTE) {
                 inclusive = true
             }
@@ -53,7 +53,7 @@ fun SplashScreen(
     fun login(event: SplashEvent.Login) {
         when (event) {
             is SplashEvent.Login.Success -> {
-                navigateToEntry()
+                navigateToHome()
             }
 
             is SplashEvent.Login.Fail -> {
