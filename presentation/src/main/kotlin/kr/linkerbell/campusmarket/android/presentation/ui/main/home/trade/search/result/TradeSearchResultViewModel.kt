@@ -13,18 +13,18 @@ import kotlinx.coroutines.flow.catch
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.EventFlow
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.asEventFlow
+import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Trade
 import kr.linkerbell.campusmarket.android.domain.model.feature.trade.CategoryList
-import kr.linkerbell.campusmarket.android.domain.model.feature.trade.SummarizedTrade
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.error.ServerException
+import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.SearchTradeUseCase
 import kr.linkerbell.campusmarket.android.domain.usecase.feature.trade.GetCategoryListUseCase
-import kr.linkerbell.campusmarket.android.domain.usecase.feature.trade.SearchTradeListUseCase
 import kr.linkerbell.campusmarket.android.presentation.common.base.BaseViewModel
 import kr.linkerbell.campusmarket.android.presentation.common.base.ErrorEvent
 
 @HiltViewModel
 class TradeSearchResultViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val searchTradeListUseCase: SearchTradeListUseCase,
+    private val searchTradeListUseCase: SearchTradeUseCase,
     private val getCategoryListUseCase: GetCategoryListUseCase
 ) : BaseViewModel() {
 
@@ -35,9 +35,9 @@ class TradeSearchResultViewModel @Inject constructor(
     private val _event: MutableEventFlow<TradeSearchResultEvent> = MutableEventFlow()
     val event: EventFlow<TradeSearchResultEvent> = _event.asEventFlow()
 
-    private val _summarizedTradeList: MutableStateFlow<PagingData<SummarizedTrade>> =
+    private val _summarizedTradeList: MutableStateFlow<PagingData<Trade>> =
         MutableStateFlow(PagingData.empty())
-    val summarizedTradeList: StateFlow<PagingData<SummarizedTrade>> =
+    val summarizedTradeList: StateFlow<PagingData<Trade>> =
         _summarizedTradeList.asStateFlow()
 
     private val _categoryList: MutableStateFlow<List<String>> =

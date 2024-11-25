@@ -64,8 +64,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.plus
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
+import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Trade
 import kr.linkerbell.campusmarket.android.domain.model.feature.trade.CategoryList
-import kr.linkerbell.campusmarket.android.domain.model.feature.trade.SummarizedTrade
 import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Black
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue100
@@ -599,7 +599,7 @@ private fun TradeSearchResultSortOption(
 
 @Composable
 private fun TradeSearchResultItemCard(
-    item: SummarizedTrade,
+    item: Trade,
     onItemCardClicked: (Long) -> Unit
 ) {
     Box(
@@ -735,7 +735,7 @@ private fun TradeSearchResultScreenPreview() {
             summarizedTradeList = MutableStateFlow(
                 PagingData.from(
                     listOf(
-                        SummarizedTrade(
+                        Trade(
                             itemId = 1L,
                             userId = 1L,
                             nickname = "유저22",
@@ -745,7 +745,10 @@ private fun TradeSearchResultScreenPreview() {
                             chatCount = 5,
                             likeCount = 2,
                             itemStatus = "",
-                            isLiked = true
+                            isLiked = true,
+                            campusId = 4748,
+                            campusRegion = "auctor",
+                            universityName = "Sondra Baird",
                         )
                     )
                 )
