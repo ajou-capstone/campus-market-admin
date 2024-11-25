@@ -72,9 +72,7 @@ import kr.linkerbell.campusmarket.android.presentation.common.util.compose.safeN
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.safeNavigateUp
 import kr.linkerbell.campusmarket.android.presentation.common.view.DialogScreen
 import kr.linkerbell.campusmarket.android.presentation.common.view.image.PostImage
-import kr.linkerbell.campusmarket.android.presentation.ui.main.home.chatroom.chat.ChatConstant
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.post.TradePostConstant
-import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.search.result.TradeSearchResultIntent
 
 @Composable
 fun TradeInfoScreen(
@@ -94,7 +92,7 @@ fun TradeInfoScreen(
     var isFailedToFetchDataDialogVisible by remember { mutableStateOf(false) }
 
     fun navigateToChatRoom(id: Long) {
-        navController.navigate("${ChatConstant.ROUTE}/$id")
+//        navController.navigate("${ChatConstant.ROUTE}/$id")
     }
 
     Scaffold(

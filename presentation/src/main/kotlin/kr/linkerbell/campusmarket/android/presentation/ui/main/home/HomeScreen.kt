@@ -36,10 +36,7 @@ import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray200
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space24
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space56
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
-import kr.linkerbell.campusmarket.android.presentation.common.view.DialogScreen
-import kr.linkerbell.campusmarket.android.presentation.ui.main.home.chatroom.ChatRoomScreen
-import kr.linkerbell.campusmarket.android.presentation.ui.main.home.mypage.MyPageScreen
-import kr.linkerbell.campusmarket.android.presentation.ui.main.home.schedule.ScheduleScreen
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.qa.QaScreen
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.TradeScreen
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -60,20 +57,7 @@ fun HomeScreen(
     var isScheduleDialogShowing: Boolean by remember { mutableStateOf(false) }
 
     if (isScheduleDialogShowing) {
-        DialogScreen(
-            isCancelable = false,
-            title = "시간표가 없어요",
-            message = "지금 시간표를 등록해보세요",
-            onConfirm = {
-                scope.launch {
-                    pagerState.scrollToPage(data.homeTypeList.indexOf(HomeType.Schedule))
-                }
-            },
-            onCancel = {},
-            onDismissRequest = {
-                isScheduleDialogShowing = false
-            }
-        )
+
     }
 
     Column(
@@ -94,16 +78,8 @@ fun HomeScreen(
                     TradeScreen(navController = navController)
                 }
 
-                HomeType.ChatRoom -> {
-                    ChatRoomScreen(navController = navController)
-                }
-
-                HomeType.Schedule -> {
-                    ScheduleScreen(navController = navController)
-                }
-
-                HomeType.MyPage -> {
-                    MyPageScreen(navController = navController)
+                HomeType.Qa -> {
+                    QaScreen(navController = navController)
                 }
 
                 null -> Unit
@@ -181,7 +157,7 @@ private fun HomeScreenPreview() {
             coroutineContext = CoroutineExceptionHandler { _, _ -> }
         ),
         data = HomeData(
-            initialHomeType = HomeType.MyPage,
+            initialHomeType = HomeType.Trade,
             homeTypeList = emptyList()
         )
     )
