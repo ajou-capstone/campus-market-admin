@@ -1,13 +1,18 @@
 package kr.linkerbell.campusmarket.android.data.repository.nonfeature.user
 
-import javax.inject.Inject
+import androidx.paging.PagingData
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.error.ServerException
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.Campus
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.MyProfile
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.RecentTrade
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserProfile
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserReview
 import kr.linkerbell.campusmarket.android.domain.repository.nonfeature.TokenRepository
 import kr.linkerbell.campusmarket.android.domain.repository.nonfeature.UserRepository
+import javax.inject.Inject
 
 class MockUserRepository @Inject constructor(
     private val tokenRepository: TokenRepository
@@ -80,6 +85,19 @@ class MockUserRepository @Inject constructor(
                 rating = 4.5
             )
         )
+    }
+
+    override suspend fun getUserReviews(
+        userId: Long
+    ): Flow<PagingData<UserReview>> {
+        return flow { }
+    }
+
+    override suspend fun getRecentTrades(
+        userId: Long,
+        type: String
+    ): Flow<PagingData<RecentTrade>> {
+        return flow { }
     }
 
     private suspend fun randomShortDelay() {

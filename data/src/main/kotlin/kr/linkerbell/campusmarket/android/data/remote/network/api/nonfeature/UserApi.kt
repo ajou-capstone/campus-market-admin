@@ -2,18 +2,21 @@ package kr.linkerbell.campusmarket.android.data.remote.network.api.nonfeature
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import javax.inject.Inject
 import kr.linkerbell.campusmarket.android.data.remote.network.di.AuthHttpClient
 import kr.linkerbell.campusmarket.android.data.remote.network.environment.BaseUrlProvider
 import kr.linkerbell.campusmarket.android.data.remote.network.environment.ErrorMessageMapper
 import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user.GetAvailableCampusListRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user.GetMyProfileRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user.GetUserProfileRes
+import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user.RecentTradeRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user.SetCampusReq
 import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user.SetProfileReq
+import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user.UserReviewRes
 import kr.linkerbell.campusmarket.android.data.remote.network.util.convert
+import javax.inject.Inject
 
 class UserApi @Inject constructor(
     @AuthHttpClient private val client: HttpClient,
@@ -63,5 +66,29 @@ class UserApi @Inject constructor(
         id: Long
     ): Result<GetUserProfileRes> {
         return client.get("$baseUrl/api/v1/profile/$id").convert(errorMessageMapper::map)
+    }
+
+    suspend fun getUserReviews(
+        userId: Long,
+        page: Int,
+        size: Int
+    ): Result<UserReviewRes> {
+        return client.get("$baseUrl/api/v1/users/$userId/reviews") {
+            parameter("page", page.toString())
+            parameter("size", size.toString())
+        }.convert(errorMessageMapper::map)
+    }
+
+    suspend fun getRecentTrade(
+        userId: Long,
+        page: Int,
+        size: Int,
+        type: String
+    ): Result<RecentTradeRes> {
+        return client.get("$baseUrl/api/v1/items/$userId/history") {
+            parameter("page", page.toString())
+            parameter("size", size.toString())
+            parameter("type", type)
+        }.convert(errorMessageMapper::map)
     }
 }
