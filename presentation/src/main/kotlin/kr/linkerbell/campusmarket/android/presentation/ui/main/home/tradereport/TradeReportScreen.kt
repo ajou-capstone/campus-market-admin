@@ -10,18 +10,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,11 +35,9 @@ import kotlinx.datetime.toLocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.eventObserve
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.TradeReport
-import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline2
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space20
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Space24
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space56
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space8
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
@@ -50,6 +45,10 @@ import kr.linkerbell.campusmarket.android.presentation.common.util.compose.Error
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.safeNavigate
+import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButton
+import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonProperties
+import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonSize
+import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonType
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.info.TradeInfoConstant
 
 @Composable
@@ -95,14 +94,18 @@ private fun TradeReportScreen(
     val (state, event, intent, logEvent, coroutineContext) = argument
     val scope = rememberCoroutineScope() + coroutineContext
 
-    fun navigateToTradeReportDetail(tradeReportId: Long) {
+    fun navigateToTradeDetail(tradeId: Long) {
         val tradeInfoRoute = makeRoute(
             route = TradeInfoConstant.ROUTE,
             arguments = mapOf(
-                TradeInfoConstant.ROUTE_ARGUMENT_ITEM_ID to tradeReportId
+                TradeInfoConstant.ROUTE_ARGUMENT_ITEM_ID to tradeId
             )
         )
         navController.safeNavigate(tradeInfoRoute)
+    }
+
+    fun navigateToTradeReportDetail(tradeReportId: Long) {
+
     }
 
     Column(
@@ -118,7 +121,7 @@ private fun TradeReportScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "QA",
+                text = "거래 신고",
                 style = Headline2.merge(Gray900),
                 modifier = Modifier
                     .padding(horizontal = Space20)
@@ -139,7 +142,7 @@ private fun TradeReportScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navigateToTradeReportDetail(tradeReport.itemReportId)
+                            navigateToTradeDetail(tradeReport.itemId)
                         }
                 ) {
                     Spacer(modifier = Modifier.height(Space8))
@@ -152,11 +155,20 @@ private fun TradeReportScreen(
                             style = Headline2.merge(Gray900)
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_chevron_right),
-                            modifier = Modifier.size(Space24),
-                            contentDescription = null
-                        )
+                        ConfirmButton(
+                            properties = ConfirmButtonProperties(
+                                size = ConfirmButtonSize.Small,
+                                type = ConfirmButtonType.Primary
+                            ),
+                            onClick = {
+                                navigateToTradeReportDetail(tradeReport.itemReportId)
+                            }
+                        ) { style ->
+                            Text(
+                                text = "처리하기",
+                                style = style
+                            )
+                        }
                         Spacer(modifier = Modifier.width(Space20))
                     }
                     Spacer(modifier = Modifier.height(Space8))

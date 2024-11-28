@@ -48,6 +48,12 @@ import kr.linkerbell.campusmarket.android.presentation.common.theme.Space8
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.ErrorObserver
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
+import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.mypage.userprofile.UserProfileConstant
+import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButton
+import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonProperties
+import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonSize
+import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonType
 
 @Composable
 fun UserReportScreen(
@@ -92,7 +98,19 @@ private fun UserReportScreen(
     val (state, event, intent, logEvent, coroutineContext) = argument
     val scope = rememberCoroutineScope() + coroutineContext
 
-    fun navigateToUserReportDetail(userreportId: Long) {
+    fun navigateToUserDetail(userId: Long) {
+        val route = makeRoute(
+            route = UserProfileConstant.ROUTE,
+            arguments = mapOf(
+                UserProfileConstant.ROUTE_ARGUMENT_USER_ID to userId
+            )
+        )
+        navController.navigate(route)
+    }
+
+    fun navigateToUserReportDetail(
+        userReportId: Long
+    ) {
 
     }
 
@@ -109,7 +127,7 @@ private fun UserReportScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "QA",
+                text = "사용자 신고",
                 style = Headline2.merge(Gray900),
                 modifier = Modifier
                     .padding(horizontal = Space20)
@@ -143,11 +161,17 @@ private fun UserReportScreen(
                             style = Headline2.merge(Gray900)
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_chevron_right),
-                            modifier = Modifier.size(Space24),
-                            contentDescription = null
-                        )
+                        ConfirmButton(
+                            properties = ConfirmButtonProperties(
+                                size = ConfirmButtonSize.Small,
+                                type = ConfirmButtonType.Primary
+                            )
+                        ) { style ->
+                            Text(
+                                text = "처리하기",
+                                style = style
+                            )
+                        }
                         Spacer(modifier = Modifier.width(Space20))
                     }
                     Spacer(modifier = Modifier.height(Space8))

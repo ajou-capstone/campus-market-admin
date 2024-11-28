@@ -109,7 +109,7 @@ private fun QaScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "QA",
+                text = "문의",
                 style = Headline2.merge(Gray900),
                 modifier = Modifier
                     .padding(horizontal = Space20)
