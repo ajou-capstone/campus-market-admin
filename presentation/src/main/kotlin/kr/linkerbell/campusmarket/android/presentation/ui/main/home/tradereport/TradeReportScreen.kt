@@ -48,6 +48,9 @@ import kr.linkerbell.campusmarket.android.presentation.common.theme.Space8
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.ErrorObserver
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
+import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
+import kr.linkerbell.campusmarket.android.presentation.common.util.compose.safeNavigate
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.info.TradeInfoConstant
 
 @Composable
 fun TradeReportScreen(
@@ -92,8 +95,14 @@ private fun TradeReportScreen(
     val (state, event, intent, logEvent, coroutineContext) = argument
     val scope = rememberCoroutineScope() + coroutineContext
 
-    fun navigateToTradeReportDetail(tradereportId: Long) {
-
+    fun navigateToTradeReportDetail(tradeReportId: Long) {
+        val tradeInfoRoute = makeRoute(
+            route = TradeInfoConstant.ROUTE,
+            arguments = mapOf(
+                TradeInfoConstant.ROUTE_ARGUMENT_ITEM_ID to tradeReportId
+            )
+        )
+        navController.safeNavigate(tradeInfoRoute)
     }
 
     Column(

@@ -59,7 +59,6 @@ import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Black
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue100
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue400
-import kr.linkerbell.campusmarket.android.presentation.common.theme.BlueGray200
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Body1
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray50
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
@@ -235,11 +234,7 @@ private fun TradeInfoTopBar(
                     }
                     .padding(horizontal = 8.dp)
             )
-            val userOption = if (isOwnerOfThisTrade) {
-                listOf("삭제", "수정")
-            } else {
-                listOf("신고")
-            }
+            val userOption = listOf("삭제")
 
             DropdownMenu(
                 expanded = isDropDownExpanded,
@@ -455,8 +450,6 @@ private fun TradeInfoBottomBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TradeItemStatus(isSold)
-            Spacer(Modifier.padding(8.dp))
-            TradeStartButton(isSold, isOwnerOfThisTrade, onChatButtonClick)
         }
     }
 }
@@ -478,51 +471,6 @@ private fun TradeItemStatus(isSold: Boolean) {
             color = White,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         )
-    }
-}
-
-@Composable
-private fun TradeStartButton(
-    isSold: Boolean,
-    isOwnerOfThisArticle: Boolean,
-    onChatButtonClick: () -> Unit,
-) {
-    if (isOwnerOfThisArticle) {
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .background(BlueGray200),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "내 판매 글입니다.",
-                modifier = Modifier.padding(8.dp),
-                style = Headline2,
-                color = Color.White
-            )
-        }
-    } else {
-        val backgroundColor = if (isSold) BlueGray200 else Blue400
-        val text = if (isSold) "거래 완료" else "거래하기"
-
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .background(backgroundColor)
-                .clickable {
-                    if (!isSold) {
-                        onChatButtonClick()
-                    }
-                },
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = text,
-                modifier = Modifier.padding(8.dp),
-                style = Headline2,
-                color = Color.White
-            )
-        }
     }
 }
 
