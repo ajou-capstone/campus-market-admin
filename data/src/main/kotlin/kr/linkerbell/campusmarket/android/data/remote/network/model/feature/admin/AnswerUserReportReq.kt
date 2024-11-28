@@ -5,8 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AnswerUserReportReq(
-    @SerialName("isDeleted")
-    val isDeleted: Boolean,
-    @SerialName("itemId")
-    val itemId: Long
+    @SerialName("isSuspended")
+    val isSuspended: Boolean,
+    @SerialName("suspendPeriod")
+    val suspendPeriod: Int,
+    @SerialName("suspendReason")
+    val suspendReason: String
 )

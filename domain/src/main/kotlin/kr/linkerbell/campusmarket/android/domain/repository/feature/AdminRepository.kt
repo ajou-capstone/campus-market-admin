@@ -27,10 +27,7 @@ interface AdminRepository {
 
     suspend fun answerTradeReport(
         id: Long,
-        isSuspended: Boolean,
-        suspendPeriod: Int,
-        suspendReason: String,
-        userId: Long
+        isDeleted: Boolean
     ): Result<Unit>
 
     fun getUserReportList(): Flow<PagingData<UserReport>>
@@ -41,8 +38,9 @@ interface AdminRepository {
 
     suspend fun answerUserReport(
         id: Long,
-        isDeleted: Boolean,
-        itemId: Long
+        isSuspended: Boolean,
+        suspendPeriod: Int,
+        suspendReason: String
     ): Result<Unit>
 
     fun getQaList(): Flow<PagingData<Qa>>

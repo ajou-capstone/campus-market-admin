@@ -5,12 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AnswerTradeReportReq(
-    @SerialName("isSuspended")
-    val isSuspended: Boolean,
-    @SerialName("suspendPeriod")
-    val suspendPeriod: Int,
-    @SerialName("suspendReason")
-    val suspendReason: String,
-    @SerialName("userId")
-    val userId: Long
+    @SerialName("isDeleted")
+    val isDeleted: Boolean
 )

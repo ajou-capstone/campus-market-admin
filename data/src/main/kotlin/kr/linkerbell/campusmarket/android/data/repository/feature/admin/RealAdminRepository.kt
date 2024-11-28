@@ -74,17 +74,11 @@ class RealAdminRepository @Inject constructor(
 
     override suspend fun answerTradeReport(
         id: Long,
-        isSuspended: Boolean,
-        suspendPeriod: Int,
-        suspendReason: String,
-        userId: Long
+        isDeleted: Boolean
     ): Result<Unit> {
         return adminApi.answerTradeReport(
             id = id,
-            isSuspended = isSuspended,
-            suspendPeriod = suspendPeriod,
-            suspendReason = suspendReason,
-            userId = userId
+            isDeleted = isDeleted
         )
     }
 
@@ -112,13 +106,15 @@ class RealAdminRepository @Inject constructor(
 
     override suspend fun answerUserReport(
         id: Long,
-        isDeleted: Boolean,
-        itemId: Long
+        isSuspended: Boolean,
+        suspendPeriod: Int,
+        suspendReason: String
     ): Result<Unit> {
         return adminApi.answerUserReport(
             id = id,
-            isDeleted = isDeleted,
-            itemId = itemId
+            isSuspended = isSuspended,
+            suspendPeriod = suspendPeriod,
+            suspendReason = suspendReason
         )
     }
 

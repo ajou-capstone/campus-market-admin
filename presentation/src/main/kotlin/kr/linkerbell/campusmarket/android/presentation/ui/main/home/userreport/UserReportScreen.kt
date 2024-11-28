@@ -10,18 +10,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,22 +35,21 @@ import kotlinx.datetime.toLocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.eventObserve
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReport
-import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline2
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space20
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Space24
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space56
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space8
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.ErrorObserver
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
-import kr.linkerbell.campusmarket.android.presentation.ui.main.home.mypage.userprofile.UserProfileConstant
 import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButton
 import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonProperties
 import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonSize
 import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonType
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.mypage.userprofile.UserProfileConstant
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.userreport.detail.UserReportDetailConstant
 
 @Composable
 fun UserReportScreen(
@@ -111,7 +107,13 @@ private fun UserReportScreen(
     fun navigateToUserReportDetail(
         userReportId: Long
     ) {
-
+        val route = makeRoute(
+            route = UserReportDetailConstant.ROUTE,
+            arguments = mapOf(
+                UserReportDetailConstant.ROUTE_ARGUMENT_USER_REPORT_ID to userReportId
+            )
+        )
+        navController.navigate(route)
     }
 
     Column(

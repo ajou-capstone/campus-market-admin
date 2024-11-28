@@ -8,13 +8,15 @@ class AnswerUserReportUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         id: Long,
-        isDeleted: Boolean,
-        itemId: Long
+        isSuspended: Boolean,
+        suspendPeriod: Int,
+        suspendReason: String
     ): Result<Unit> {
         return adminRepository.answerUserReport(
             id = id,
-            isDeleted = isDeleted,
-            itemId = itemId
+            isSuspended = isSuspended,
+            suspendPeriod = suspendPeriod,
+            suspendReason = suspendReason
         )
     }
 }

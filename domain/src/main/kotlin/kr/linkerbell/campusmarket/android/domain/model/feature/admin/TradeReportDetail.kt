@@ -7,4 +7,15 @@ data class TradeReportDetail(
     val targetId: Long,
     val userId: Long,
     val userReportId: Long
-)
+) {
+    companion object {
+        val empty = TradeReportDetail(
+            category = "",
+            description = "",
+            isCompleted = false,
+            targetId = 0,
+            userId = 0,
+            userReportId = 0
+        )
+    }
+}

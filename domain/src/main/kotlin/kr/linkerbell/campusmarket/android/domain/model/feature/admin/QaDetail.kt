@@ -7,4 +7,15 @@ data class QaDetail(
     val qaId: Long,
     val title: String,
     val userId: Long
-)
+) {
+    companion object {
+        val empty = QaDetail(
+            category = "",
+            description = "",
+            isCompleted = false,
+            qaId = 0,
+            title = "",
+            userId = 0
+        )
+    }
+}

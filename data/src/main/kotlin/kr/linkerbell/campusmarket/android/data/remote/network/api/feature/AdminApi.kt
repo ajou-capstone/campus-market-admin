@@ -10,8 +10,8 @@ import kr.linkerbell.campusmarket.android.data.remote.network.di.AuthHttpClient
 import kr.linkerbell.campusmarket.android.data.remote.network.environment.BaseUrlProvider
 import kr.linkerbell.campusmarket.android.data.remote.network.environment.ErrorMessageMapper
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerQaReq
-import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerTradeReportReq
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerUserReportReq
+import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerTradeReportReq
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetQaDetailRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetQaListRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetTradeReportDetailRes
@@ -68,18 +68,12 @@ class AdminApi @Inject constructor(
 
     suspend fun answerTradeReport(
         id: Long,
-        isSuspended: Boolean,
-        suspendPeriod: Int,
-        suspendReason: String,
-        userId: Long
+        isDeleted: Boolean
     ): Result<Unit> {
         return client.patch("$baseUrl/admin/api/v1/items/report/$id") {
             setBody(
                 AnswerTradeReportReq(
-                    isSuspended = isSuspended,
-                    suspendPeriod = suspendPeriod,
-                    suspendReason = suspendReason,
-                    userId = userId
+                    isDeleted = isDeleted
                 )
             )
         }.convert(errorMessageMapper::map)
@@ -104,14 +98,16 @@ class AdminApi @Inject constructor(
 
     suspend fun answerUserReport(
         id: Long,
-        isDeleted: Boolean,
-        itemId: Long
+        isSuspended: Boolean,
+        suspendPeriod: Int,
+        suspendReason: String
     ): Result<Unit> {
         return client.patch("$baseUrl/admin/api/v1/users/report/$id") {
             setBody(
                 AnswerUserReportReq(
-                    isDeleted = isDeleted,
-                    itemId = itemId
+                    isSuspended = isSuspended,
+                    suspendPeriod = suspendPeriod,
+                    suspendReason = suspendReason
                 )
             )
         }.convert(errorMessageMapper::map)

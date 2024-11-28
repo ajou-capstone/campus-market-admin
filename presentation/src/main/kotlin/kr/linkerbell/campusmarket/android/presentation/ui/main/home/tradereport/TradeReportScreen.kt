@@ -50,6 +50,7 @@ import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.Confi
 import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonSize
 import kr.linkerbell.campusmarket.android.presentation.common.view.confirm.ConfirmButtonType
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.info.TradeInfoConstant
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.tradereport.detail.TradeReportDetailConstant
 
 @Composable
 fun TradeReportScreen(
@@ -105,7 +106,13 @@ private fun TradeReportScreen(
     }
 
     fun navigateToTradeReportDetail(tradeReportId: Long) {
-
+        val route = makeRoute(
+            route = TradeReportDetailConstant.ROUTE,
+            arguments = mapOf(
+                TradeReportDetailConstant.ROUTE_ARGUMENT_TRADE_REPORT_ID to tradeReportId
+            )
+        )
+        navController.navigate(route)
     }
 
     Column(

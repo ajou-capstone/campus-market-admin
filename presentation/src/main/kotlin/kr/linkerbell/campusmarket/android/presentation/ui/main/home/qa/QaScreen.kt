@@ -48,6 +48,8 @@ import kr.linkerbell.campusmarket.android.presentation.common.theme.Space8
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.ErrorObserver
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
+import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.qa.detail.QaDetailConstant
 
 @Composable
 fun QaScreen(
@@ -93,7 +95,13 @@ private fun QaScreen(
     val scope = rememberCoroutineScope() + coroutineContext
 
     fun navigateToQaDetail(qaId: Long) {
-
+        val route = makeRoute(
+            route = QaDetailConstant.ROUTE,
+            arguments = mapOf(
+                QaDetailConstant.ROUTE_ARGUMENT_QA_ID to qaId
+            )
+        )
+        navController.navigate(route)
     }
 
     Column(

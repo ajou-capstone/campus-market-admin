@@ -21,9 +21,7 @@ import kr.linkerbell.campusmarket.android.presentation.common.base.BaseViewModel
 @HiltViewModel
 class QaViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val answerQaUseCase: AnswerQaUseCase,
-    private val getQaListUseCase: GetQaListUseCase,
-    private val getQaDetailUseCase: GetQaDetailUseCase
+    private val getQaListUseCase: GetQaListUseCase
 ) : BaseViewModel() {
 
     private val _state: MutableStateFlow<QaScreenState> = MutableStateFlow(QaScreenState.Init)
