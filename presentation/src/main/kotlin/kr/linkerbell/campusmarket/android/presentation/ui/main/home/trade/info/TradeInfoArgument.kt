@@ -21,6 +21,9 @@ sealed interface TradeInfoState {
 
 sealed interface TradeInfoEvent {
     data class NavigateToChatRoom(val id: Long) : TradeInfoEvent
+    sealed interface Delete : TradeInfoEvent {
+        data object Success : Delete
+    }
 }
 
 sealed interface TradeInfoIntent {

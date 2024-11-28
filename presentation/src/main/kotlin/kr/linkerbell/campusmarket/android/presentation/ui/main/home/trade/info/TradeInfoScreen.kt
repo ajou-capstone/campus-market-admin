@@ -159,7 +159,6 @@ fun TradeInfoScreen(
             isOwnerOfThisTrade = isOwnerOfThisTrade,
             onConfirm = {
                 argument.intent(TradeInfoIntent.DeleteThisPost)
-                navController.safeNavigateUp()
             },
             onDismissRequest = { isDeleteConfirmButtonVisible = false }
         )
@@ -180,6 +179,10 @@ fun TradeInfoScreen(
                         isNewChatRoomAvailable = false
                         navigateToChatRoom(id = event.id)
                     }
+                }
+
+                TradeInfoEvent.Delete.Success -> {
+                    navController.safeNavigateUp()
                 }
             }
         }

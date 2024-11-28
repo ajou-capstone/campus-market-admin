@@ -132,6 +132,7 @@ class TradeInfoViewModel @Inject constructor(
                 itemId = tradeInfo.value.itemId
             ).onSuccess {
                 _state.value = TradeInfoState.Init
+                _event.emit(TradeInfoEvent.Delete.Success)
             }.onFailure { exception ->
                 _state.value = TradeInfoState.Init
                 when (exception) {
