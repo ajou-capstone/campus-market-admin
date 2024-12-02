@@ -5,6 +5,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import javax.inject.Inject
 import kr.linkerbell.campusmarket.android.data.remote.network.di.AuthHttpClient
 import kr.linkerbell.campusmarket.android.data.remote.network.environment.BaseUrlProvider
 import kr.linkerbell.campusmarket.android.data.remote.network.environment.ErrorMessageMapper
@@ -16,7 +17,6 @@ import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.u
 import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user.SetProfileReq
 import kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user.UserReviewRes
 import kr.linkerbell.campusmarket.android.data.remote.network.util.convert
-import javax.inject.Inject
 
 class UserApi @Inject constructor(
     @AuthHttpClient private val client: HttpClient,
@@ -65,7 +65,8 @@ class UserApi @Inject constructor(
     suspend fun getUserProfile(
         id: Long
     ): Result<GetUserProfileRes> {
-        return client.get("$baseUrl/api/v1/profile/$id").convert(errorMessageMapper::map)
+        return client.get("$baseUrl/admin/api/v1/profile/$id")
+            .convert(errorMessageMapper::map)
     }
 
     suspend fun getUserReviews(
