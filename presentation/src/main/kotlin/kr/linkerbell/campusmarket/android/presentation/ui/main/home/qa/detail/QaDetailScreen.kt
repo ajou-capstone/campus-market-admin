@@ -141,7 +141,7 @@ fun QaDetailScreen(
                 type = ConfirmButtonType.Primary
             ),
             modifier = Modifier
-                .weight(1f)
+                .fillMaxWidth()
                 .padding(horizontal = Space20),
             onClick = {
                 intent(

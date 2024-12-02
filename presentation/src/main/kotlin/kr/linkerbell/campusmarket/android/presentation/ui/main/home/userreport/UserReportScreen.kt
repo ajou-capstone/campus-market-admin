@@ -145,12 +145,12 @@ private fun UserReportScreen(
                 count = data.userReportList.itemCount,
                 key = { index -> data.userReportList[index]?.userReportId ?: -1 }
             ) { index ->
-                val userreport = data.userReportList[index] ?: return@items
+                val userReport = data.userReportList[index] ?: return@items
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navigateToUserReportDetail(userreport.userReportId)
+                            navigateToUserDetail(userReport.userId)
                         }
                 ) {
                     Spacer(modifier = Modifier.height(Space8))
@@ -159,15 +159,20 @@ private fun UserReportScreen(
                     ) {
                         Spacer(modifier = Modifier.width(Space20))
                         Text(
-                            text = userreport.description,
-                            style = Headline2.merge(Gray900)
+                            text = userReport.description,
+                            style = Headline2.merge(Gray900),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = Space20)
                         )
-                        Spacer(modifier = Modifier.weight(1f))
                         ConfirmButton(
                             properties = ConfirmButtonProperties(
                                 size = ConfirmButtonSize.Small,
                                 type = ConfirmButtonType.Primary
-                            )
+                            ),
+                            onClick = {
+                                navigateToUserReportDetail(userReport.userReportId)
+                            }
                         ) { style ->
                             Text(
                                 text = "처리하기",

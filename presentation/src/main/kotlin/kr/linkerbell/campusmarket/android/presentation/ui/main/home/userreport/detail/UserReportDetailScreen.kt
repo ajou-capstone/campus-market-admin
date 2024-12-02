@@ -152,7 +152,9 @@ fun UserReportDetailScreen(
         )
         Spacer(modifier = Modifier.height(Space20))
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Space20)
         ) {
             ConfirmButton(
                 properties = ConfirmButtonProperties(

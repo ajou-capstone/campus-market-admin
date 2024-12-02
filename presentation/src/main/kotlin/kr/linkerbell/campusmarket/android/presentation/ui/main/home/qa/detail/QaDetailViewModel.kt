@@ -2,6 +2,7 @@ package kr.linkerbell.campusmarket.android.presentation.ui.main.home.qa.detail
 
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,6 @@ import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.AnswerQaU
 import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.GetQaDetailUseCase
 import kr.linkerbell.campusmarket.android.presentation.common.base.BaseViewModel
 import kr.linkerbell.campusmarket.android.presentation.common.base.ErrorEvent
-import javax.inject.Inject
 
 @HiltViewModel
 class QaDetailViewModel @Inject constructor(
@@ -30,7 +30,7 @@ class QaDetailViewModel @Inject constructor(
     val event: EventFlow<QaDetailEvent> = _event.asEventFlow()
 
     private val qaId: Long by lazy {
-        savedStateHandle.get<Long>(QaDetailConstant.ROUTE) ?: -1
+        savedStateHandle.get<Long>(QaDetailConstant.ROUTE_ARGUMENT_QA_ID) ?: -1
     }
 
     private val _qaDetail: MutableStateFlow<QaDetail> = MutableStateFlow(QaDetail.empty)

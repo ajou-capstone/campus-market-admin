@@ -31,7 +31,7 @@ class UserReportDetailViewModel @Inject constructor(
     val event: EventFlow<UserReportDetailEvent> = _event.asEventFlow()
 
     private val qaId: Long by lazy {
-        savedStateHandle.get<Long>(UserReportDetailConstant.ROUTE) ?: -1
+        savedStateHandle.get<Long>(UserReportDetailConstant.ROUTE_ARGUMENT_USER_REPORT_ID) ?: -1
     }
 
     private val _userReportDetail: MutableStateFlow<UserReportDetail> =

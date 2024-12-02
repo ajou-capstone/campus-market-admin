@@ -2,6 +2,7 @@ package kr.linkerbell.campusmarket.android.presentation.ui.main.home.tradereport
 
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,6 @@ import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.AnswerTra
 import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.GetTradeReportDetailUseCase
 import kr.linkerbell.campusmarket.android.presentation.common.base.BaseViewModel
 import kr.linkerbell.campusmarket.android.presentation.common.base.ErrorEvent
-import javax.inject.Inject
 
 @HiltViewModel
 class TradeReportDetailViewModel @Inject constructor(
@@ -31,7 +31,7 @@ class TradeReportDetailViewModel @Inject constructor(
     val event: EventFlow<TradeReportDetailEvent> = _event.asEventFlow()
 
     private val qaId: Long by lazy {
-        savedStateHandle.get<Long>(TradeReportDetailConstant.ROUTE) ?: -1
+        savedStateHandle.get<Long>(TradeReportDetailConstant.ROUTE_ARGUMENT_TRADE_REPORT_ID) ?: -1
     }
 
     private val _tradeReportDetail: MutableStateFlow<TradeReportDetail> =

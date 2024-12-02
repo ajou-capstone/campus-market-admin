@@ -159,9 +159,11 @@ private fun TradeReportScreen(
                         Spacer(modifier = Modifier.width(Space20))
                         Text(
                             text = tradeReport.description,
-                            style = Headline2.merge(Gray900)
+                            style = Headline2.merge(Gray900),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = Space20)
                         )
-                        Spacer(modifier = Modifier.weight(1f))
                         ConfirmButton(
                             properties = ConfirmButtonProperties(
                                 size = ConfirmButtonSize.Small,
