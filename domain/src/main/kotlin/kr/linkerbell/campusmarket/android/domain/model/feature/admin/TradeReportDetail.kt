@@ -4,18 +4,18 @@ data class TradeReportDetail(
     val category: String,
     val description: String,
     val isCompleted: Boolean,
-    val targetId: Long,
-    val userId: Long,
-    val userReportId: Long
+    val itemId: Long,
+    val itemReportId: Long,
+    val userId: Long
 ) {
     companion object {
         val empty = TradeReportDetail(
             category = "",
             description = "",
             isCompleted = false,
-            targetId = 0,
-            userId = 0,
-            userReportId = 0
+            itemId = 0,
+            itemReportId = 0,
+            userId = 0
         )
     }
 }

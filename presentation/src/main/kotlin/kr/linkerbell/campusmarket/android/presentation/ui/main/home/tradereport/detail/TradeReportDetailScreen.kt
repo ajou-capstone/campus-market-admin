@@ -108,7 +108,7 @@ fun TradeReportDetailScreen(
         }
         Spacer(modifier = Modifier.height(Space12))
         Text(
-            text = data.tradeReportDetail.category,
+            text = translateToKor(data.tradeReportDetail.category),
             style = Body0.merge(Gray900),
             modifier = Modifier
                 .padding(horizontal = Space20)
@@ -180,6 +180,18 @@ fun TradeReportDetailScreen(
     }
 }
 
+private fun translateToKor(engCategory: String): String {
+    return when (engCategory) {
+        "PROHIBITED_ITEM" -> "거래 금지 물품"
+        "NOT_SECONDHAND_POST" -> "중고거래 게시글이 아님"
+        "COMMERCIAL_SELLER" -> "전문판매업자"
+        "DISPUTE_DURING_TRANSACTION" -> "거래 중 분쟁"
+        "FRAUD" -> "사기"
+        "OTHER" -> "기타"
+        else -> "알 수 없음 ($engCategory)"
+    }
+}
+
 @Preview
 @Composable
 private fun TradeReportDetailScreenPreview() {
@@ -194,13 +206,12 @@ private fun TradeReportDetailScreenPreview() {
         ),
         data = TradeReportDetailData(
             tradeReportDetail = TradeReportDetail(
-                category = "부적절한 게시글",
-                description = "게시글이 이상해요",
+                category = "부적절한 사용자",
+                description = "사용자가 이상해요",
                 isCompleted = false,
-                targetId = 8896,
-                userId = 4640,
-                userReportId = 1908
-
+                itemId = 7293,
+                itemReportId = 1647,
+                userId = 6509
             )
         )
     )

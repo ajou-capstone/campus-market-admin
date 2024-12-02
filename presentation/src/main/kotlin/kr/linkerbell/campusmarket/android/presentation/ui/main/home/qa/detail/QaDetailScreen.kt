@@ -106,7 +106,7 @@ fun QaDetailScreen(
         }
         Spacer(modifier = Modifier.height(Space12))
         Text(
-            text = data.qaDetail.category,
+            text = translateToKor(data.qaDetail.category),
             style = Body0.merge(Gray900),
             modifier = Modifier
                 .padding(horizontal = Space20)
@@ -173,6 +173,17 @@ fun QaDetailScreen(
                 is QaDetailEvent.Answer -> answer(event)
             }
         }
+    }
+}
+
+private fun translateToKor(engCategory: String): String {
+    return when (engCategory) {
+        "ACCOUNT_INQUIRY" -> "계정 문의"
+        "CHAT_AND_NOTIFICATION" -> "채팅, 알림"
+        "SECONDHAND_TRANSACTION" -> "중고거래"
+        "ADVERTISEMENT_INQUIRY" -> "광고 문의"
+        "OTHER" -> "기타"
+        else -> "알 수 없음 ($engCategory)"
     }
 }
 

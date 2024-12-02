@@ -100,7 +100,7 @@ fun UserReportDetailScreen(
                 )
             }
             Text(
-                text = data.userReportDetail.title,
+                text = "게시글 신고",
                 style = Headline2.merge(Gray900),
                 modifier = Modifier
                     .padding(horizontal = Space20)
@@ -109,7 +109,7 @@ fun UserReportDetailScreen(
         }
         Spacer(modifier = Modifier.height(Space12))
         Text(
-            text = data.userReportDetail.category,
+            text = translateToKor(data.userReportDetail.category),
             style = Body0.merge(Gray900),
             modifier = Modifier
                 .padding(horizontal = Space20)
@@ -217,6 +217,20 @@ fun UserReportDetailScreen(
     }
 }
 
+private fun translateToKor(engCategory: String): String {
+    return when (engCategory) {
+        "OTHER" -> "기타"
+        "FRAUD" -> "사기"
+        "DISPUTE_DURING_TRANSACTION" -> "거래 중 분쟁"
+        "RUDE_USER" -> "비매너 사용자"
+        "PROFESSIONAL_SELLER" -> "전문판매업자"
+        "DATING_PURPOSE_CHAT" -> "연애 목적의 대화"
+        "HATE_SPEECH" -> "욕설, 비방, 혐오표현"
+        "INAPPROPRIATE_SEXUAL_BEHAVIOR" -> "부적절한 성적 행위"
+        else -> "알 수 없음 ($engCategory)"
+    }
+}
+
 @Preview
 @Composable
 private fun UserReportDetailScreenPreview() {
@@ -231,14 +245,12 @@ private fun UserReportDetailScreenPreview() {
         ),
         data = UserReportDetailData(
             userReportDetail = UserReportDetail(
-                category = "부적절한 사용자",
-                description = "사용자가 이상해요",
+                category = "부적절한 게시글",
+                description = "게시글이 이상해요",
                 isCompleted = false,
-                itemId = 7293,
-                itemReportId = 1647,
-                title = "이상한 사용자가 있어요",
-                userId = 6509
-
+                targetId = 8896,
+                userId = 4640,
+                userReportId = 1908
             )
         )
     )

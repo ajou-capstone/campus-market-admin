@@ -501,26 +501,16 @@ private fun DeleteConfirmDialog(
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    if (isOwnerOfThisTrade) {
-        DialogScreen(
-            title = "정말 삭제하시겠습니까?",
-            message = "등록된 정보가 사라집니다.",
-            isCancelable = true,
-            onConfirm = { onConfirm() },
-            onCancel = {},
-            onDismissRequest = {
-                onDismissRequest()
-            }
-        )
-    } else {
-        DialogScreen(
-            title = "삭제 권한이 없습니다!",
-            isCancelable = false,
-            onDismissRequest = {
-                onDismissRequest()
-            }
-        )
-    }
+    DialogScreen(
+        title = "정말 삭제하시겠습니까?",
+        message = "등록된 정보가 사라집니다.",
+        isCancelable = true,
+        onConfirm = { onConfirm() },
+        onCancel = {},
+        onDismissRequest = {
+            onDismissRequest()
+        }
+    )
 }
 
 @Composable

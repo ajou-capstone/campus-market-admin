@@ -10,8 +10,8 @@ import kr.linkerbell.campusmarket.android.data.remote.network.di.AuthHttpClient
 import kr.linkerbell.campusmarket.android.data.remote.network.environment.BaseUrlProvider
 import kr.linkerbell.campusmarket.android.data.remote.network.environment.ErrorMessageMapper
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerQaReq
-import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerUserReportReq
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerTradeReportReq
+import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerUserReportReq
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetQaDetailRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetQaListRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetTradeReportDetailRes
@@ -117,7 +117,7 @@ class AdminApi @Inject constructor(
         page: Int,
         size: Int
     ): Result<GetQaListRes> {
-        return client.get("$baseUrl/admin/api/v1/items/report") {
+        return client.get("$baseUrl/admin/api/v1/qa") {
             parameter("page", page.toString())
             parameter("size", size.toString())
         }.convert(errorMessageMapper::map)
@@ -126,7 +126,7 @@ class AdminApi @Inject constructor(
     suspend fun getQaDetail(
         id: Long
     ): Result<GetQaDetailRes> {
-        return client.get("$baseUrl/admin/api/v1/items/report/$id")
+        return client.get("$baseUrl/admin/api/v1/qa/$id")
             .convert(errorMessageMapper::map)
     }
 
@@ -134,7 +134,7 @@ class AdminApi @Inject constructor(
         id: Long,
         answerDescription: String
     ): Result<Unit> {
-        return client.patch("$baseUrl/admin/api/v1/items/report/$id") {
+        return client.patch("$baseUrl/admin/api/v1/qa/$id") {
             setBody(
                 AnswerQaReq(
                     answerDescription = answerDescription

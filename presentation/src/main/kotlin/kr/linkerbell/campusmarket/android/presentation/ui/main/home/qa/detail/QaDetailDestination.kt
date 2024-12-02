@@ -14,7 +14,7 @@ fun NavGraphBuilder.qaDetailDestination(
     navController: NavController
 ) {
     composable(
-        route = QaDetailConstant.ROUTE,
+        route = QaDetailConstant.ROUTE_STRUCTURE,
         arguments = listOf(
             navArgument(QaDetailConstant.ROUTE_ARGUMENT_QA_ID) {
                 type = NavType.LongType

@@ -14,7 +14,7 @@ fun NavGraphBuilder.userReportDetailDestination(
     navController: NavController
 ) {
     composable(
-        route = UserReportDetailConstant.ROUTE,
+        route = UserReportDetailConstant.ROUTE_STRUCTURE,
         arguments = listOf(
             navArgument(UserReportDetailConstant.ROUTE_ARGUMENT_USER_REPORT_ID) {
                 type = NavType.LongType

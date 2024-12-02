@@ -13,24 +13,21 @@ data class GetUserReportDetailRes(
     val description: String,
     @SerialName("isCompleted")
     val isCompleted: Boolean,
-    @SerialName("itemId")
-    val itemId: Long,
-    @SerialName("itemReportId")
-    val itemReportId: Long,
-    @SerialName("title")
-    val title: String,
+    @SerialName("targetId")
+    val targetId: Long,
     @SerialName("userId")
-    val userId: Long
+    val userId: Long,
+    @SerialName("userReportId")
+    val userReportId: Long
 ) : DataMapper<UserReportDetail> {
     override fun toDomain(): UserReportDetail {
         return UserReportDetail(
             category = category,
             description = description,
             isCompleted = isCompleted,
-            itemId = itemId,
-            itemReportId = itemReportId,
-            title = title,
-            userId = userId
+            targetId = targetId,
+            userId = userId,
+            userReportId = userReportId
         )
     }
 }

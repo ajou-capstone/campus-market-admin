@@ -14,7 +14,7 @@ fun NavGraphBuilder.tradeReportDetailDestination(
     navController: NavController
 ) {
     composable(
-        route = TradeReportDetailConstant.ROUTE,
+        route = TradeReportDetailConstant.ROUTE_STRUCTURE,
         arguments = listOf(
             navArgument(TradeReportDetailConstant.ROUTE_ARGUMENT_TRADE_REPORT_ID) {
                 type = NavType.LongType
