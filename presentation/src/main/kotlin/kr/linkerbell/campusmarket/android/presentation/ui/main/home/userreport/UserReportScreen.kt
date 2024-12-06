@@ -191,7 +191,7 @@ private fun UserReportScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            if (userReport.isCompleted) White else Gray900.copy(alpha = 0.1f)
+                            if (userReport.isCompleted) Gray900.copy(alpha = 0.1f) else White
                         )
                 ) {
                     Spacer(modifier = Modifier.height(Space8))

@@ -189,7 +189,7 @@ private fun TradeReportScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            if (tradeReport.isCompleted) White else Gray900.copy(alpha = 0.1f)
+                            if (tradeReport.isCompleted) Gray900.copy(alpha = 0.1f) else White
                         )
                         .clickable {
                             navigateToTradeDetail(tradeReport.itemId)

@@ -178,7 +178,7 @@ private fun QaScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            if (qa.isCompleted) White else Gray900.copy(alpha = 0.1f)
+                            if (qa.isCompleted) Gray900.copy(alpha = 0.1f) else White
                         )
                         .clickable {
                             navigateToQaDetail(qa.qaId)
