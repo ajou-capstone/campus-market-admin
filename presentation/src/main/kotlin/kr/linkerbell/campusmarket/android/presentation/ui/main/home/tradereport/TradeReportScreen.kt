@@ -188,6 +188,9 @@ private fun TradeReportScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(
+                            if (tradeReport.isCompleted) White else Gray900.copy(alpha = 0.1f)
+                        )
                         .clickable {
                             navigateToTradeDetail(tradeReport.itemId)
                         }
@@ -214,7 +217,7 @@ private fun TradeReportScreen(
                             }
                         ) { style ->
                             Text(
-                                text = "처리하기",
+                                text = if (tradeReport.isCompleted) "확인하기" else "처리하기",
                                 style = style
                             )
                         }

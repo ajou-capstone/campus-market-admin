@@ -16,6 +16,7 @@ import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admi
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetQaListRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetTradeReportDetailRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetTradeReportListRes
+import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetUserProfileListRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetUserReportDetailRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetUserReportListRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.SearchTradeListRes
@@ -146,6 +147,16 @@ class AdminApi @Inject constructor(
                     answerDescription = answerDescription
                 )
             )
+        }.convert(errorMessageMapper::map)
+    }
+
+    suspend fun getUserProfileList(
+        page: Int,
+        size: Int
+    ): Result<GetUserProfileListRes> {
+        return client.get("$baseUrl/admin/api/v1/users") {
+            parameter("page", page.toString())
+            parameter("size", size.toString())
         }.convert(errorMessageMapper::map)
     }
 }

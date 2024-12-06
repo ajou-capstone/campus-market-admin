@@ -11,6 +11,7 @@ import kr.linkerbell.campusmarket.android.data.remote.network.util.toDomain
 import kr.linkerbell.campusmarket.android.data.repository.feature.admin.paging.QaPagingSource
 import kr.linkerbell.campusmarket.android.data.repository.feature.admin.paging.SearchTradePagingSource
 import kr.linkerbell.campusmarket.android.data.repository.feature.admin.paging.TradeReportPagingSource
+import kr.linkerbell.campusmarket.android.data.repository.feature.admin.paging.UserProfilePagingSource
 import kr.linkerbell.campusmarket.android.data.repository.feature.admin.paging.UserReportPagingSource
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Qa
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.QaDetail
@@ -19,6 +20,7 @@ import kr.linkerbell.campusmarket.android.domain.model.feature.admin.TradeReport
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.TradeReportDetail
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReport
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReportDetail
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserProfile
 import kr.linkerbell.campusmarket.android.domain.repository.feature.AdminRepository
 
 class RealAdminRepository @Inject constructor(
@@ -157,5 +159,19 @@ class RealAdminRepository @Inject constructor(
             id = id,
             answerDescription = answerDescription
         )
+    }
+
+    override fun getUserProfileList(): Flow<PagingData<UserProfile>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = DEFAULT_PAGING_SIZE,
+                enablePlaceholders = true
+            ),
+            pagingSourceFactory = {
+                UserProfilePagingSource(
+                    adminApi = adminApi
+                )
+            },
+        ).flow
     }
 }

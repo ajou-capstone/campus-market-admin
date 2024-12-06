@@ -1,8 +1,10 @@
-package kr.linkerbell.campusmarket.android.presentation.ui.main.home.qa
+package kr.linkerbell.campusmarket.android.presentation.ui.main.home.user
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,18 +15,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,30 +42,37 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.eventObserve
-import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Qa
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserProfile
 import kr.linkerbell.campusmarket.android.presentation.R
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Body0
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Body1
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray400
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline1
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline2
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Red400
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Space12
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space20
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space24
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Space4
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Space40
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space56
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space8
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.ErrorObserver
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
-import kr.linkerbell.campusmarket.android.presentation.ui.main.home.qa.detail.QaDetailConstant
+import kr.linkerbell.campusmarket.android.presentation.common.view.image.PostImage
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.mypage.userprofile.UserProfileConstant
 
 @Composable
-fun QaScreen(
+fun UserScreen(
     navController: NavController,
-    viewModel: QaViewModel = hiltViewModel(),
+    viewModel: UserViewModel = hiltViewModel(),
 ) {
-    val argument: QaScreenArgument = Unit.let {
+    val argument: UserScreenArgument = Unit.let {
         val state by viewModel.state.collectAsStateWithLifecycle()
 
-        QaScreenArgument(
+        UserScreenArgument(
             state = state,
             event = viewModel.event,
             intent = viewModel::onIntent,
@@ -74,16 +81,16 @@ fun QaScreen(
         )
     }
 
-    val data: QaData = Unit.let {
-        val qaList = viewModel.qaList.collectAsLazyPagingItems()
+    val data: UserData = Unit.let {
+        val userProfileList = viewModel.userList.collectAsLazyPagingItems()
 
-        QaData(
-            qaList = qaList,
+        UserData(
+            userProfileList = userProfileList,
         )
     }
 
     ErrorObserver(viewModel)
-    QaScreen(
+    UserScreen(
         navController = navController,
         argument = argument,
         data = data,
@@ -92,21 +99,19 @@ fun QaScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun QaScreen(
+private fun UserScreen(
     navController: NavController,
-    argument: QaScreenArgument,
-    data: QaData
+    argument: UserScreenArgument,
+    data: UserData
 ) {
     val (state, event, intent, logEvent, coroutineContext) = argument
     val scope = rememberCoroutineScope() + coroutineContext
 
-    var selectedTab: Int by remember { mutableIntStateOf(0) }
-
-    fun navigateToQaDetail(qaId: Long) {
+    fun navigateToUserDetail(userId: Long) {
         val route = makeRoute(
-            route = QaDetailConstant.ROUTE,
+            route = UserProfileConstant.ROUTE,
             arguments = mapOf(
-                QaDetailConstant.ROUTE_ARGUMENT_QA_ID to qaId
+                UserProfileConstant.ROUTE_ARGUMENT_USER_ID to userId
             )
         )
         navController.navigate(route)
@@ -125,43 +130,11 @@ private fun QaScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "문의",
+                text = "사용자 목록",
                 style = Headline2.merge(Gray900),
                 modifier = Modifier
                     .padding(horizontal = Space20)
                     .weight(1f)
-            )
-        }
-        Row(
-            modifier = Modifier
-                .height(Space56)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            QaScreenTab(
-                text = "전체",
-                isSelected = selectedTab == 0,
-                onClick = {
-                    selectedTab = 0
-                },
-                modifier = Modifier.weight(1f)
-            )
-            QaScreenTab(
-                text = "처리 대기중",
-                isSelected = selectedTab == 1,
-                onClick = {
-                    selectedTab = 1
-                },
-                modifier = Modifier.weight(1f)
-            )
-            QaScreenTab(
-                text = "처리 완료",
-                isSelected = selectedTab == 2,
-                onClick = {
-                    selectedTab = 2
-                },
-                modifier = Modifier.weight(1f)
             )
         }
         LazyColumn(
@@ -170,18 +143,15 @@ private fun QaScreen(
                 .fillMaxWidth()
         ) {
             items(
-                count = data.qaList.itemCount,
-                key = { index -> data.qaList[index]?.qaId ?: -1 }
+                count = data.userProfileList.itemCount,
+                key = { index -> data.userProfileList[index]?.id ?: -1 }
             ) { index ->
-                val qa = data.qaList[index] ?: return@items
+                val user = data.userProfileList[index] ?: return@items
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(
-                            if (qa.isCompleted) White else Gray900.copy(alpha = 0.1f)
-                        )
                         .clickable {
-                            navigateToQaDetail(qa.qaId)
+                            navigateToUserDetail(user.id)
                         }
                 ) {
                     Spacer(modifier = Modifier.height(Space8))
@@ -189,10 +159,49 @@ private fun QaScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Spacer(modifier = Modifier.width(Space20))
-                        Text(
-                            text = qa.title,
-                            style = Headline2.merge(Gray900)
-                        )
+                        Box(
+                            modifier = Modifier
+                                .size(Space40)
+                                .clip(RoundedCornerShape(Space12))
+                                .background(
+                                    color = White,
+                                    shape = RoundedCornerShape(Space4)
+                                )
+                                .border(
+                                    1.dp,
+                                    Gray900,
+                                    shape = RoundedCornerShape(Space12)
+                                )
+                        ) {
+                            PostImage(
+                                data = user.profileImage,
+                                modifier = Modifier.size(Space40)
+                            )
+                            if (user.isDeleted) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(Gray900.copy(alpha = 0.5f))
+                                )
+                            } else if (user.suspendedDate != null) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(Red400.copy(alpha = 0.5f))
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(Space8))
+                        Row {
+                            Text(
+                                text = user.nickname,
+                                style = Body0.merge(Gray900)
+                            )
+                            Text(
+                                text = user.campusName,
+                                style = Body1.merge(Gray400)
+                            )
+                        }
                         Spacer(modifier = Modifier.weight(1f))
                         Icon(
                             painter = painterResource(id = R.drawable.ic_chevron_right),
@@ -207,12 +216,8 @@ private fun QaScreen(
         }
     }
 
-    LaunchedEffectWithLifecycle(selectedTab, coroutineContext) {
-        when (selectedTab) {
-            0 -> intent(QaScreenIntent.Refresh("all"))
-            1 -> intent(QaScreenIntent.Refresh("inprogress"))
-            2 -> intent(QaScreenIntent.Refresh("done"))
-        }
+    LaunchedEffectWithLifecycle(Unit, coroutineContext) {
+        intent(UserScreenIntent.Refresh)
     }
 
     LaunchedEffectWithLifecycle(event, coroutineContext) {
@@ -222,60 +227,32 @@ private fun QaScreen(
     }
 }
 
-@Composable
-private fun QaScreenTab(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .padding(vertical = 8.dp)
-            .clickable {
-                onClick()
-            }
-    ) {
-        Text(
-            text = text,
-            style = if (isSelected) Headline1.merge(Gray900) else Headline2.merge(Gray900),
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-        if (isSelected) {
-            HorizontalDivider(
-                thickness = 2.dp,
-                color = Gray900,
-                modifier = Modifier.padding(horizontal = 4.dp)
-            )
-        }
-    }
-}
-
 @Preview
 @Composable
-private fun QaScreenPreview() {
+private fun UserScreenPreview() {
     val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-    QaScreen(
+    UserScreen(
         navController = rememberNavController(),
-        argument = QaScreenArgument(
-            state = QaScreenState.Init,
+        argument = UserScreenArgument(
+            state = UserScreenState.Init,
             event = MutableEventFlow(),
             intent = {},
             logEvent = { _, _ -> },
             coroutineContext = CoroutineExceptionHandler { _, _ -> }
         ),
-        data = QaData(
-            qaList = MutableStateFlow(
+        data = UserData(
+            userProfileList = MutableStateFlow(
                 PagingData.from(
                     listOf(
-                        Qa(
-                            category = "dolores",
-                            createdDate = now,
-                            isCompleted = false,
-                            qaId = 7402,
-                            title = "pro",
-                            userId = 3431
+                        UserProfile(
+                            id = 1L,
+                            nickname = "장성혁",
+                            profileImage = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                            rating = 4.5,
+                            isDeleted = false,
+                            suspendedDate = null,
+                            suspendedReason = "",
+                            campusName = "원주 캠퍼스"
                         )
                     )
                 )

@@ -535,7 +535,11 @@ private fun OtherUserProfileScreenPreview() {
                 id = 959L,
                 nickname = "user3205",
                 profileImage = "https://picsum.photos/200",
-                rating = 4.4
+                rating = 4.4,
+                isDeleted = false,
+                suspendedDate = null,
+                suspendedReason = "",
+                campusName = "원주 캠퍼스"
             ),
             recentReviews = MutableStateFlow(
                 PagingData.from(

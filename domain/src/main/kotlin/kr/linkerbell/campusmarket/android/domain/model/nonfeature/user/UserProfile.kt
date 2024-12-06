@@ -1,17 +1,27 @@
 package kr.linkerbell.campusmarket.android.domain.model.nonfeature.user
 
+import kotlinx.datetime.LocalDateTime
+
 data class UserProfile(
     val id: Long,
     val nickname: String,
     val profileImage: String,
-    val rating: Double
+    val rating: Double,
+    val isDeleted: Boolean,
+    val suspendedDate: LocalDateTime?,
+    val suspendedReason: String,
+    val campusName: String
 ) {
     companion object {
         val empty = UserProfile(
             id = -1,
             nickname = "",
             profileImage = "",
-            rating = 0.0
+            rating = 0.0,
+            isDeleted = false,
+            suspendedDate = null,
+            suspendedReason = "",
+            campusName = ""
         )
     }
 }

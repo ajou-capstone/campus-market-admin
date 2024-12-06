@@ -39,9 +39,15 @@ sealed class HomeType(
         iconRes = R.drawable.ic_menu
     )
 
+    @Parcelize
+    data object User : HomeType(
+        route = UserReportConstant.ROUTE,
+        iconRes = R.drawable.ic_menu
+    )
+
     companion object {
         fun values(): List<HomeType> {
-            return listOf(Trade, Qa, TradeReport, UserReport)
+            return listOf(Trade, Qa, TradeReport, UserReport, User)
         }
     }
 }

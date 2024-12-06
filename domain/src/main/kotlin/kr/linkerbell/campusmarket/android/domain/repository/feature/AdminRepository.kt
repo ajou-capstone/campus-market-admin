@@ -9,6 +9,7 @@ import kr.linkerbell.campusmarket.android.domain.model.feature.admin.TradeReport
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.TradeReportDetail
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReport
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReportDetail
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserProfile
 
 interface AdminRepository {
     fun searchTradeList(
@@ -59,4 +60,6 @@ interface AdminRepository {
         id: Long,
         answerDescription: String
     ): Result<Unit>
+
+    fun getUserProfileList(): Flow<PagingData<UserProfile>>
 }

@@ -1,4 +1,4 @@
-package kr.linkerbell.campusmarket.android.data.remote.network.model.nonfeature.user
+package kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
@@ -7,7 +7,23 @@ import kr.linkerbell.campusmarket.android.data.remote.mapper.DataMapper
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserProfile
 
 @Serializable
-data class GetUserProfileRes(
+data class GetUserProfileListRes(
+    @SerialName("content")
+    val content: List<GetUserProfileListItemRes>,
+    @SerialName("currentPage")
+    val currentPage: Int,
+    @SerialName("hasNext")
+    val hasNext: Boolean,
+    @SerialName("hasPrevious")
+    val hasPrevious: Boolean,
+    @SerialName("size")
+    val size: Int,
+    @SerialName("sort")
+    val sort: GetUserProfileListSortRes
+)
+
+@Serializable
+data class GetUserProfileListItemRes(
     @SerialName("id")
     val id: Long,
     @SerialName("nickname")
@@ -23,7 +39,7 @@ data class GetUserProfileRes(
     @SerialName("suspendedReason")
     val suspendedReason: String = "",
     @SerialName("campusName")
-    val campusName: String
+    val campusName: String,
 ) : DataMapper<UserProfile> {
     override fun toDomain(): UserProfile {
         return UserProfile(
@@ -39,3 +55,13 @@ data class GetUserProfileRes(
         )
     }
 }
+
+@Serializable
+data class GetUserProfileListSortRes(
+    @SerialName("empty")
+    val empty: Boolean,
+    @SerialName("sorted")
+    val sorted: Boolean,
+    @SerialName("unsorted")
+    val unsorted: Boolean
+)

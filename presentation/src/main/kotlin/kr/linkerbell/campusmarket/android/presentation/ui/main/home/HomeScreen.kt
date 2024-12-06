@@ -39,6 +39,7 @@ import kr.linkerbell.campusmarket.android.presentation.common.util.compose.Launc
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.qa.QaScreen
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.TradeScreen
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.tradereport.TradeReportScreen
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.user.UserScreen
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.userreport.UserReportScreen
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -90,6 +91,10 @@ fun HomeScreen(
 
                 HomeType.UserReport -> {
                     UserReportScreen(navController = navController)
+                }
+
+                HomeType.User -> {
+                    UserScreen(navController = navController)
                 }
 
                 null -> Unit

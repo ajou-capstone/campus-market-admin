@@ -190,6 +190,9 @@ private fun UserReportScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(
+                            if (userReport.isCompleted) White else Gray900.copy(alpha = 0.1f)
+                        )
                 ) {
                     Spacer(modifier = Modifier.height(Space8))
                     Row(
@@ -243,7 +246,7 @@ private fun UserReportScreen(
                             }
                         ) { style ->
                             Text(
-                                text = "처리하기",
+                                text = if (userReport.isCompleted) "확인하기" else "처리하기",
                                 style = style
                             )
                         }
