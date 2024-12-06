@@ -20,5 +20,5 @@ sealed interface TradeReportScreenState {
 sealed interface TradeReportScreenEvent
 
 sealed interface TradeReportScreenIntent{
-    data object Refresh : TradeReportScreenIntent
+    data class Refresh(val status: String) : TradeReportScreenIntent
 }

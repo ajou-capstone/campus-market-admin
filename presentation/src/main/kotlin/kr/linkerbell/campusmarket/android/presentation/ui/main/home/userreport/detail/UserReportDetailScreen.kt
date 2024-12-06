@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -66,8 +68,8 @@ fun UserReportDetailScreen(
 
     if (isAnswerSuccessDialogShowing) {
         DialogScreen(
-            title = "문의",
-            message = "문의글이 성공적으로 처리되었습니다.",
+            title = "사용자 신고",
+            message = "사용자 신고 처리가 성공적으로 완료되었습니다.",
             isCancelable = false,
             onConfirm = { navController.safeNavigateUp() },
             onDismissRequest = { isAnswerSuccessDialogShowing = false }
@@ -130,6 +132,7 @@ fun UserReportDetailScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Space20),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             maxLines = Int.MAX_VALUE,
             maxTextLength = Int.MAX_VALUE,
             onValueChange = {

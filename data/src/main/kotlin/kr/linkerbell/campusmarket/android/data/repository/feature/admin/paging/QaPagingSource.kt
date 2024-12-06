@@ -7,7 +7,8 @@ import kr.linkerbell.campusmarket.android.data.remote.network.api.feature.AdminA
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Qa
 
 class QaPagingSource(
-    private val adminApi: AdminApi
+    private val adminApi: AdminApi,
+    private val status: String
 ) : PagingSource<Int, Qa>() {
 
     override fun getRefreshKey(state: PagingState<Int, Qa>): Int? {
@@ -22,6 +23,7 @@ class QaPagingSource(
         val pageSize = params.loadSize
 
         return adminApi.getQaList(
+            status = status,
             page = pageNum,
             size = pageSize
         ).map { data ->

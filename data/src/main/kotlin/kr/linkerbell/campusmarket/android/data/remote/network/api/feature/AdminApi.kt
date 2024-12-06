@@ -50,10 +50,12 @@ class AdminApi @Inject constructor(
     }
 
     suspend fun getTradeReportList(
+        status: String,
         page: Int,
         size: Int
     ): Result<GetTradeReportListRes> {
         return client.get("$baseUrl/admin/api/v1/items/report") {
+            parameter("status", status)
             parameter("page", page.toString())
             parameter("size", size.toString())
         }.convert(errorMessageMapper::map)
@@ -80,10 +82,12 @@ class AdminApi @Inject constructor(
     }
 
     suspend fun getUserReportList(
+        status: String,
         page: Int,
         size: Int
     ): Result<GetUserReportListRes> {
         return client.get("$baseUrl/admin/api/v1/users/report") {
+            parameter("status", status)
             parameter("page", page.toString())
             parameter("size", size.toString())
         }.convert(errorMessageMapper::map)
@@ -114,10 +118,12 @@ class AdminApi @Inject constructor(
     }
 
     suspend fun getQaList(
+        status: String,
         page: Int,
         size: Int
     ): Result<GetQaListRes> {
         return client.get("$baseUrl/admin/api/v1/qa") {
+            parameter("status", status)
             parameter("page", page.toString())
             parameter("size", size.toString())
         }.convert(errorMessageMapper::map)

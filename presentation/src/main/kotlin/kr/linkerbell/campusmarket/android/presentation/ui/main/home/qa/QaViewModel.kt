@@ -36,14 +36,18 @@ class QaViewModel @Inject constructor(
     fun onIntent(intent: QaScreenIntent) {
         when (intent) {
             is QaScreenIntent.Refresh -> {
-                getQaList()
+                getQaList(intent.status)
             }
         }
     }
 
-    private fun getQaList() {
+    private fun getQaList(
+        status: String
+    ) {
         launch {
-            getQaListUseCase()
+            getQaListUseCase(
+                status = status
+            )
                 .cachedIn(viewModelScope)
                 .collect {
                     _qaList.value = it

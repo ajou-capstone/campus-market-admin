@@ -9,7 +9,11 @@ import kr.linkerbell.campusmarket.android.domain.repository.feature.AdminReposit
 class GetQaListUseCase @Inject constructor(
     private val adminRepository: AdminRepository
 ) {
-    operator fun invoke(): Flow<PagingData<Qa>> {
-        return adminRepository.getQaList()
+    operator fun invoke(
+        status: String
+    ): Flow<PagingData<Qa>> {
+        return adminRepository.getQaList(
+            status = status
+        )
     }
 }

@@ -20,5 +20,5 @@ sealed interface QaScreenState {
 sealed interface QaScreenEvent
 
 sealed interface QaScreenIntent{
-    data object Refresh : QaScreenIntent
+    data class Refresh(val status: String) : QaScreenIntent
 }

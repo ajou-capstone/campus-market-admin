@@ -64,8 +64,8 @@ fun TradeReportDetailScreen(
 
     if (isAnswerSuccessDialogShowing) {
         DialogScreen(
-            title = "문의",
-            message = "문의글이 성공적으로 처리되었습니다.",
+            title = "거래 신고",
+            message = "거래 신고 처리가 성공적으로 완료되었습니다.",
             isCancelable = false,
             onConfirm = { navController.safeNavigateUp() },
             onDismissRequest = { isAnswerSuccessDialogShowing = false }

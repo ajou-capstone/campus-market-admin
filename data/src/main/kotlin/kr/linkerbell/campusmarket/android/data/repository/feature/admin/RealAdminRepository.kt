@@ -50,7 +50,9 @@ class RealAdminRepository @Inject constructor(
         ).flow
     }
 
-    override fun getTradeReportList(): Flow<PagingData<TradeReport>> {
+    override fun getTradeReportList(
+        status: String
+    ): Flow<PagingData<TradeReport>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGING_SIZE,
@@ -58,7 +60,8 @@ class RealAdminRepository @Inject constructor(
             ),
             pagingSourceFactory = {
                 TradeReportPagingSource(
-                    adminApi = adminApi
+                    adminApi = adminApi,
+                    status = status
                 )
             },
         ).flow
@@ -82,7 +85,9 @@ class RealAdminRepository @Inject constructor(
         )
     }
 
-    override fun getUserReportList(): Flow<PagingData<UserReport>> {
+    override fun getUserReportList(
+        status: String
+    ): Flow<PagingData<UserReport>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGING_SIZE,
@@ -90,7 +95,8 @@ class RealAdminRepository @Inject constructor(
             ),
             pagingSourceFactory = {
                 UserReportPagingSource(
-                    adminApi = adminApi
+                    adminApi = adminApi,
+                    status = status
                 )
             },
         ).flow
@@ -118,7 +124,9 @@ class RealAdminRepository @Inject constructor(
         )
     }
 
-    override fun getQaList(): Flow<PagingData<Qa>> {
+    override fun getQaList(
+        status: String
+    ): Flow<PagingData<Qa>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGING_SIZE,
@@ -126,7 +134,8 @@ class RealAdminRepository @Inject constructor(
             ),
             pagingSourceFactory = {
                 QaPagingSource(
-                    adminApi = adminApi
+                    adminApi = adminApi,
+                    status = status
                 )
             },
         ).flow

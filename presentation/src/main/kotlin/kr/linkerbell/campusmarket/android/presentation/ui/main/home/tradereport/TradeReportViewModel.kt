@@ -38,14 +38,20 @@ class TradeReportViewModel @Inject constructor(
     fun onIntent(intent: TradeReportScreenIntent) {
         when (intent) {
             is TradeReportScreenIntent.Refresh -> {
-                getTradeReportList()
+                getTradeReportList(
+                    status = intent.status
+                )
             }
         }
     }
 
-    private fun getTradeReportList() {
+    private fun getTradeReportList(
+        status: String
+    ) {
         launch {
-            getTradeReportListUseCase()
+            getTradeReportListUseCase(
+                status = status
+            )
                 .cachedIn(viewModelScope)
                 .collect {
                     _tradeReportList.value = it

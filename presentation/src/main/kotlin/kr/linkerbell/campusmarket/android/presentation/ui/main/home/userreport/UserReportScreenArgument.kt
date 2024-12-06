@@ -20,5 +20,5 @@ sealed interface UserReportScreenState {
 sealed interface UserReportScreenEvent
 
 sealed interface UserReportScreenIntent{
-    data object Refresh : UserReportScreenIntent
+    data class Refresh(val status: String) : UserReportScreenIntent
 }

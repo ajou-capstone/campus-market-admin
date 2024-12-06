@@ -7,7 +7,8 @@ import kr.linkerbell.campusmarket.android.data.remote.network.api.feature.AdminA
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReport
 
 class UserReportPagingSource(
-    private val adminApi: AdminApi
+    private val adminApi: AdminApi,
+    private val status: String
 ) : PagingSource<Int, UserReport>() {
 
     override fun getRefreshKey(state: PagingState<Int, UserReport>): Int? {
@@ -22,6 +23,7 @@ class UserReportPagingSource(
         val pageSize = params.loadSize
 
         return adminApi.getUserReportList(
+            status = status,
             page = pageNum,
             size = pageSize
         ).map { data ->

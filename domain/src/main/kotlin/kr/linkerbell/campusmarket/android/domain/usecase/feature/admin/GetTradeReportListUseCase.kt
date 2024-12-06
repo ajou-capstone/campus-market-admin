@@ -9,7 +9,11 @@ import kr.linkerbell.campusmarket.android.domain.repository.feature.AdminReposit
 class GetTradeReportListUseCase @Inject constructor(
     private val adminRepository: AdminRepository
 ) {
-    operator fun invoke(): Flow<PagingData<TradeReport>> {
-        return adminRepository.getTradeReportList()
+    operator fun invoke(
+        status: String
+    ): Flow<PagingData<TradeReport>> {
+        return adminRepository.getTradeReportList(
+            status = status
+        )
     }
 }

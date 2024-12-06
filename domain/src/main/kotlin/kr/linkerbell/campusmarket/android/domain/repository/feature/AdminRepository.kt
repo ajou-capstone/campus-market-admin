@@ -19,7 +19,9 @@ interface AdminRepository {
         sorted: String
     ): Flow<PagingData<Trade>>
 
-    fun getTradeReportList(): Flow<PagingData<TradeReport>>
+    fun getTradeReportList(
+        status: String
+    ): Flow<PagingData<TradeReport>>
 
     suspend fun getTradeReportDetail(
         id: Long
@@ -30,7 +32,9 @@ interface AdminRepository {
         isDeleted: Boolean
     ): Result<Unit>
 
-    fun getUserReportList(): Flow<PagingData<UserReport>>
+    fun getUserReportList(
+        status: String
+    ): Flow<PagingData<UserReport>>
 
     suspend fun getUserReportDetail(
         id: Long
@@ -43,7 +47,9 @@ interface AdminRepository {
         suspendReason: String
     ): Result<Unit>
 
-    fun getQaList(): Flow<PagingData<Qa>>
+    fun getQaList(
+        status: String
+    ): Flow<PagingData<Qa>>
 
     suspend fun getQaDetail(
         id: Long

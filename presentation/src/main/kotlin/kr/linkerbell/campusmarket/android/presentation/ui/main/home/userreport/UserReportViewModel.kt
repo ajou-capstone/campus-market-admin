@@ -38,14 +38,20 @@ class UserReportViewModel @Inject constructor(
     fun onIntent(intent: UserReportScreenIntent) {
         when (intent) {
             is UserReportScreenIntent.Refresh -> {
-                getUserReportList()
+                getUserReportList(
+                    status = intent.status
+                )
             }
         }
     }
 
-    private fun getUserReportList() {
+    private fun getUserReportList(
+        status: String
+    ) {
         launch {
-            getUserReportListUseCase()
+            getUserReportListUseCase(
+                status = status
+            )
                 .cachedIn(viewModelScope)
                 .collect {
                     _userReportList.value = it

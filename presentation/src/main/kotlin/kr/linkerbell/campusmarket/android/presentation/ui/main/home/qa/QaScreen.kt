@@ -14,15 +14,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -40,6 +45,7 @@ import kr.linkerbell.campusmarket.android.common.util.coroutine.event.eventObser
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Qa
 import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline1
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline2
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space20
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space24
@@ -94,6 +100,8 @@ private fun QaScreen(
     val (state, event, intent, logEvent, coroutineContext) = argument
     val scope = rememberCoroutineScope() + coroutineContext
 
+    var selectedTab: Int by remember { mutableIntStateOf(0) }
+
     fun navigateToQaDetail(qaId: Long) {
         val route = makeRoute(
             route = QaDetailConstant.ROUTE,
@@ -122,6 +130,38 @@ private fun QaScreen(
                 modifier = Modifier
                     .padding(horizontal = Space20)
                     .weight(1f)
+            )
+        }
+        Row(
+            modifier = Modifier
+                .height(Space56)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            QaScreenTab(
+                text = "전체",
+                isSelected = selectedTab == 0,
+                onClick = {
+                    selectedTab = 0
+                },
+                modifier = Modifier.weight(1f)
+            )
+            QaScreenTab(
+                text = "처리 대기중",
+                isSelected = selectedTab == 1,
+                onClick = {
+                    selectedTab = 1
+                },
+                modifier = Modifier.weight(1f)
+            )
+            QaScreenTab(
+                text = "처리 완료",
+                isSelected = selectedTab == 2,
+                onClick = {
+                    selectedTab = 2
+                },
+                modifier = Modifier.weight(1f)
             )
         }
         LazyColumn(
@@ -164,13 +204,47 @@ private fun QaScreen(
         }
     }
 
-    LaunchedEffectWithLifecycle(Unit, coroutineContext) {
-        intent(QaScreenIntent.Refresh)
+    LaunchedEffectWithLifecycle(selectedTab, coroutineContext) {
+        when (selectedTab) {
+            0 -> intent(QaScreenIntent.Refresh("all"))
+            1 -> intent(QaScreenIntent.Refresh("inprogress"))
+            2 -> intent(QaScreenIntent.Refresh("done"))
+        }
     }
 
     LaunchedEffectWithLifecycle(event, coroutineContext) {
         event.eventObserve { event ->
 
+        }
+    }
+}
+
+@Composable
+private fun QaScreenTab(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .clickable {
+                onClick()
+            }
+    ) {
+        Text(
+            text = text,
+            style = if (isSelected) Headline1.merge(Gray900) else Headline2.merge(Gray900),
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+        if (isSelected) {
+            HorizontalDivider(
+                thickness = 2.dp,
+                color = Gray900,
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
         }
     }
 }
