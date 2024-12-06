@@ -128,6 +128,7 @@ fun QaDetailScreen(
                 .fillMaxWidth()
                 .padding(horizontal = Space20)
                 .weight(1f),
+            isEnabled = !data.qaDetail.isCompleted,
             maxLines = Int.MAX_VALUE,
             maxTextLength = Int.MAX_VALUE,
             onValueChange = {
@@ -143,6 +144,7 @@ fun QaDetailScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Space20),
+            isEnabled = !data.qaDetail.isCompleted,
             onClick = {
                 intent(
                     QaDetailIntent.Answer.Admit(

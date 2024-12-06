@@ -135,6 +135,7 @@ fun UserReportDetailScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             maxLines = Int.MAX_VALUE,
             maxTextLength = Int.MAX_VALUE,
+            isEnabled = !data.userReportDetail.isCompleted,
             onValueChange = {
                 day = it
             }
@@ -149,6 +150,7 @@ fun UserReportDetailScreen(
                 .weight(1f),
             maxLines = Int.MAX_VALUE,
             maxTextLength = Int.MAX_VALUE,
+            isEnabled = !data.userReportDetail.isCompleted,
             onValueChange = {
                 description = it
             }
@@ -165,6 +167,7 @@ fun UserReportDetailScreen(
                     type = ConfirmButtonType.Secondary
                 ),
                 modifier = Modifier.weight(1f),
+                isEnabled = !data.userReportDetail.isCompleted,
                 onClick = {
                     intent(
                         UserReportDetailIntent.Answer.Deny(
@@ -185,6 +188,7 @@ fun UserReportDetailScreen(
                     type = ConfirmButtonType.Primary
                 ),
                 modifier = Modifier.weight(1f),
+                isEnabled = !data.userReportDetail.isCompleted,
                 onClick = {
                     intent(
                         UserReportDetailIntent.Answer.Admit(

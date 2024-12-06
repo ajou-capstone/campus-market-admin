@@ -134,6 +134,7 @@ fun TradeReportDetailScreen(
                     type = ConfirmButtonType.Secondary
                 ),
                 modifier = Modifier.weight(1f),
+                isEnabled = !data.tradeReportDetail.isCompleted,
                 onClick = {
                     intent(TradeReportDetailIntent.Answer.Deny)
                 }
@@ -150,6 +151,7 @@ fun TradeReportDetailScreen(
                     type = ConfirmButtonType.Primary
                 ),
                 modifier = Modifier.weight(1f),
+                isEnabled = !data.tradeReportDetail.isCompleted,
                 onClick = {
                     intent(TradeReportDetailIntent.Answer.Admit)
                 }
