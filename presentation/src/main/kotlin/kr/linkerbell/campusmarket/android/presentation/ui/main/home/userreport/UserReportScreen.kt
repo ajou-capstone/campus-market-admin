@@ -44,6 +44,7 @@ import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline1
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline2
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space20
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Space4
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space56
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space8
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
@@ -189,9 +190,6 @@ private fun UserReportScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            navigateToUserDetail(userReport.userId)
-                        }
                 ) {
                     Spacer(modifier = Modifier.height(Space8))
                     Row(
@@ -205,6 +203,36 @@ private fun UserReportScreen(
                                 .weight(1f)
                                 .padding(end = Space20)
                         )
+                        ConfirmButton(
+                            properties = ConfirmButtonProperties(
+                                size = ConfirmButtonSize.Small,
+                                type = ConfirmButtonType.Secondary
+                            ),
+                            onClick = {
+                                navigateToUserDetail(userReport.userId)
+                            }
+                        ) { style ->
+                            Text(
+                                text = "신고자",
+                                style = style
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(Space4))
+                        ConfirmButton(
+                            properties = ConfirmButtonProperties(
+                                size = ConfirmButtonSize.Small,
+                                type = ConfirmButtonType.Secondary
+                            ),
+                            onClick = {
+                                navigateToUserDetail(userReport.targetId)
+                            }
+                        ) { style ->
+                            Text(
+                                text = "신고대상자",
+                                style = style
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(Space4))
                         ConfirmButton(
                             properties = ConfirmButtonProperties(
                                 size = ConfirmButtonSize.Small,
