@@ -386,7 +386,7 @@ private fun TradeInfoAuthor(
                 modifier = Modifier.padding(start = 8.dp)
             )
         }
-        Text(text = "${authorInfo.rating} 점", color = Black, style = Headline3)
+        Text(text = "${String.format("%.1f",authorInfo.rating)} 점", color = Black, style = Headline3)
     }
 
 }
