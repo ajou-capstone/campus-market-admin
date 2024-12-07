@@ -1,5 +1,7 @@
 package kr.linkerbell.campusmarket.android.domain.model.feature.admin
 
+import kotlinx.datetime.LocalDateTime
+
 data class Trade(
     val campusId: Long,
     val campusRegion: String,
@@ -13,5 +15,8 @@ data class Trade(
     val thumbnail: String,
     val title: String,
     val universityName: String,
-    val userId: Long
+    val userId: Long,
+    val createdDate: LocalDateTime,
+    val lastModifiedDate: LocalDateTime,
+    val isDeleted: Boolean,
 )

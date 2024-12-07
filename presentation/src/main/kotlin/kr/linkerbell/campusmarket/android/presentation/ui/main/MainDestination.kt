@@ -9,7 +9,7 @@ import kr.linkerbell.campusmarket.android.presentation.ui.main.home.mypage.userp
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.qa.detail.qaDetailDestination
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.info.tradeInfoDestination
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.post.tradePostDestination
-import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.search.result.tradeSearchResultDestination
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.result.tradeSearchResultDestination
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.search.tradeSearchDestination
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.tradereport.detail.tradeReportDetailDestination
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.userreport.detail.userReportDetailDestination

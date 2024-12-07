@@ -25,7 +25,8 @@ class MockTradeRepository @Inject constructor(
         category: String,
         minPrice: Int,
         maxPrice: Int,
-        sorted: String
+        sorted: String,
+        itemStatus: String
     ): Flow<PagingData<SummarizedTrade>> {
         randomShortDelay()
 

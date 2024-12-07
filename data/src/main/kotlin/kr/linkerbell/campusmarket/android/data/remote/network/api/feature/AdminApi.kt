@@ -36,6 +36,7 @@ class AdminApi @Inject constructor(
         minPrice: Int,
         maxPrice: Int,
         sorted: String,
+        itemStatus: String,
         page: Int,
         size: Int
     ): Result<SearchTradeListRes> {
@@ -44,6 +45,7 @@ class AdminApi @Inject constructor(
             parameter("category", category)
             parameter("minPrice", minPrice.toString())
             parameter("maxPrice", maxPrice.toString())
+            parameter("itemStatus", itemStatus)
             parameter("sort", sorted)
             parameter("page", page)
             parameter("size", size)

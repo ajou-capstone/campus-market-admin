@@ -1,4 +1,4 @@
-package kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.search.result
+package kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.result
 
 import androidx.compose.runtime.Immutable
 import androidx.paging.compose.LazyPagingItems
@@ -17,5 +17,6 @@ data class TradeSearchQuery(
     val category: String = "",
     val minPrice: Int = 0,
     val maxPrice: Int = Int.MAX_VALUE,
-    val sorted: String = "createdDate,desc"
+    val sorted: String = "createdDate,desc",
+    val itemStatus: String = ""
 )
