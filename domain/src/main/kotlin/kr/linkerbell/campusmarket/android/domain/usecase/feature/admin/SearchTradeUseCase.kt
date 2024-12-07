@@ -15,7 +15,9 @@ class SearchTradeUseCase @Inject constructor(
         minPrice: Int,
         maxPrice: Int,
         sorted: String,
-        itemStatus: String
+        itemStatus: String,
+        campusId: Long,
+        isDeleted: Boolean?
     ): Flow<PagingData<Trade>> {
         return adminRepository.searchTradeList(
             name = name,
@@ -23,7 +25,9 @@ class SearchTradeUseCase @Inject constructor(
             minPrice = minPrice,
             maxPrice = maxPrice,
             sorted = sorted,
-            itemStatus = itemStatus
+            itemStatus = itemStatus,
+            campusId = campusId,
+            isDeleted = isDeleted
         )
     }
 }

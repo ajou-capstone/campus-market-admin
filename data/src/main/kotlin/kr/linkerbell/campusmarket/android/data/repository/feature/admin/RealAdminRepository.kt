@@ -20,6 +20,7 @@ import kr.linkerbell.campusmarket.android.domain.model.feature.admin.TradeReport
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.TradeReportDetail
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReport
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReportDetail
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.Campus
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserProfile
 import kr.linkerbell.campusmarket.android.domain.repository.feature.AdminRepository
 
@@ -33,7 +34,9 @@ class RealAdminRepository @Inject constructor(
         minPrice: Int,
         maxPrice: Int,
         sorted: String,
-        itemStatus: String
+        itemStatus: String,
+        campusId: Long,
+        isDeleted: Boolean?
     ): Flow<PagingData<Trade>> {
         return Pager(
             config = PagingConfig(
@@ -48,7 +51,9 @@ class RealAdminRepository @Inject constructor(
                     minPrice = minPrice,
                     maxPrice = maxPrice,
                     sorted = sorted,
-                    itemStatus = itemStatus
+                    itemStatus = itemStatus,
+                    campusId = campusId,
+                    isDeleted = isDeleted
                 )
             },
         ).flow
@@ -175,5 +180,9 @@ class RealAdminRepository @Inject constructor(
                 )
             },
         ).flow
+    }
+
+    override suspend fun getCampusList(): Result<List<Campus>> {
+        return adminApi.getCampusList().toDomain()
     }
 }

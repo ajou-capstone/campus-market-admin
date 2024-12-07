@@ -12,6 +12,7 @@ import kr.linkerbell.campusmarket.android.data.remote.network.environment.ErrorM
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerQaReq
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerTradeReportReq
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.AnswerUserReportReq
+import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetCampusListRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetQaDetailRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetQaListRes
 import kr.linkerbell.campusmarket.android.data.remote.network.model.feature.admin.GetTradeReportDetailRes
@@ -37,6 +38,8 @@ class AdminApi @Inject constructor(
         maxPrice: Int,
         sorted: String,
         itemStatus: String,
+        isDeleted: Boolean?,
+        campusId: Long,
         page: Int,
         size: Int
     ): Result<SearchTradeListRes> {
@@ -47,6 +50,8 @@ class AdminApi @Inject constructor(
             parameter("maxPrice", maxPrice.toString())
             parameter("itemStatus", itemStatus)
             parameter("sort", sorted)
+            isDeleted?.let { parameter("isDeleted", isDeleted) }
+            if (campusId != -1L) parameter("campusId", campusId)
             parameter("page", page)
             parameter("size", size)
         }.convert(errorMessageMapper::map)
@@ -160,5 +165,10 @@ class AdminApi @Inject constructor(
             parameter("page", page.toString())
             parameter("size", size.toString())
         }.convert(errorMessageMapper::map)
+    }
+
+    suspend fun getCampusList(): Result<GetCampusListRes> {
+        return client.get("$baseUrl/admin/api/v1/campuses")
+            .convert(errorMessageMapper::map)
     }
 }

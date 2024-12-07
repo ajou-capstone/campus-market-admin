@@ -61,6 +61,7 @@ import kotlinx.datetime.LocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Trade
 import kr.linkerbell.campusmarket.android.domain.model.feature.trade.CategoryList
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.Campus
 import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Black
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue200
@@ -77,8 +78,8 @@ import kr.linkerbell.campusmarket.android.presentation.common.theme.White
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.isEmpty
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
-import kr.linkerbell.campusmarket.android.presentation.common.util.compose.safeNavigateUp
 import kr.linkerbell.campusmarket.android.presentation.common.view.RippleBox
+import kr.linkerbell.campusmarket.android.presentation.common.view.dropdown.TextDropdownMenu
 import kr.linkerbell.campusmarket.android.presentation.common.view.textfield.TypingTextField
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.common.TradeCard
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.info.TradeInfoConstant
@@ -97,6 +98,7 @@ fun TradeSearchResultScreen(
     val categoryList = listOf("") + data.categoryList
     var isPriceFilterAvailable by remember { mutableStateOf(false) }
     var isSoldItemVisibleChecked by remember { mutableStateOf(false) }
+    var isDeletedVisibleChecked by remember { mutableStateOf(false) }
 
     val refreshState = rememberPullToRefreshState()
 
@@ -123,6 +125,10 @@ fun TradeSearchResultScreen(
             onQueryChanged = {
                 updateCurrentQuery(currentQuery.copy(name = it))
             },
+            campusList = data.campusList,
+            onCampusClick = { campus ->
+                updateCurrentQuery(currentQuery.copy(campusId = campus.id))
+            }
         )
         Box(
             modifier = Modifier
@@ -169,6 +175,30 @@ fun TradeSearchResultScreen(
                                 currentQuery.copy(
                                     itemStatus =
                                     if (isSoldItemVisibleChecked) "FORSALE" else ""
+                                )
+                            )
+                        },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Blue400,
+                            uncheckedColor = Gray900
+                        )
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "삭제된 상품은 제외하기",
+                        style = Body1,
+                        color = Black
+                    )
+                    Checkbox(
+                        checked = isDeletedVisibleChecked,
+                        onCheckedChange = {
+                            isDeletedVisibleChecked = !isDeletedVisibleChecked
+                            updateCurrentQuery(
+                                currentQuery.copy(
+                                    isDeleted = if (isDeletedVisibleChecked) false else null
                                 )
                             )
                         },
@@ -255,8 +285,13 @@ fun TradeSearchResultScreen(
 private fun TradeSearchResultSearchBar(
     navController: NavController,
     initialQuery: String,
-    onQueryChanged: (String) -> Unit
+    onQueryChanged: (String) -> Unit,
+    campusList: List<Campus>,
+    onCampusClick: (Campus) -> Unit,
 ) {
+    var isExpanded: Boolean by remember { mutableStateOf(false) }
+    var selectedItem: Campus? by remember { mutableStateOf(null) }
+
     var text by remember { mutableStateOf(initialQuery) }
 
     Row(
@@ -267,19 +302,27 @@ private fun TradeSearchResultSearchBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RippleBox(
-            modifier = Modifier.padding(start = Space20),
+
+        Text(
+            text = selectedItem?.region ?: "전체",
+            style = Body0.merge(Gray900),
+            modifier = Modifier
+                .padding(start = Space20)
+                .clickable {
+                    isExpanded = true
+                }
+        )
+
+        TextDropdownMenu(
+            items = campusList,
+            label = { campus -> campus.region },
+            isExpanded = isExpanded,
+            onDismissRequest = { isExpanded = false },
             onClick = {
-                navController.safeNavigateUp()
+                selectedItem = it
+                onCampusClick(it)
             }
-        ) {
-            Icon(
-                modifier = Modifier.size(Space24),
-                painter = painterResource(R.drawable.ic_chevron_left),
-                contentDescription = null,
-                tint = Gray900
-            )
-        }
+        )
         TypingTextField(
             text = text,
             onValueChange = { text = it },
@@ -691,7 +734,8 @@ private fun TradeSearchResultScreenPreview() {
             currentQuery = TradeSearchQuery(
                 name = "콜라"
             ),
-            categoryList = CategoryList.empty.categoryList
+            categoryList = CategoryList.empty.categoryList,
+            campusList = emptyList()
         )
     )
 }

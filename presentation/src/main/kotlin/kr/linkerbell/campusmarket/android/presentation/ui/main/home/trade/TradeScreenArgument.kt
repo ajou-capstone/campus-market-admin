@@ -3,6 +3,7 @@ package kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade
 import androidx.compose.runtime.Immutable
 import kotlin.coroutines.CoroutineContext
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.EventFlow
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.Campus
 
 @Immutable
 data class TradeScreenArgument(
@@ -19,6 +20,6 @@ sealed interface TradeScreenState {
 
 sealed interface TradeScreenEvent
 
-sealed interface TradeScreenIntent{
-    data object RefreshNewTrades : TradeScreenIntent
+sealed interface TradeScreenIntent {
+    data class RefreshNewTrades(val campus: Campus, val itemStatus: String, val isDeleted: Boolean?) : TradeScreenIntent
 }

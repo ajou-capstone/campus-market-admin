@@ -42,11 +42,13 @@ fun NavGraphBuilder.tradeSearchResultDestination(
             val tradeList = viewModel.summarizedTradeList.collectAsLazyPagingItems()
             val categoryList = viewModel.categoryList.value
             val currentQuery = viewModel.tradeSearchQuery.value
+            val campusList by viewModel.campusList.collectAsStateWithLifecycle()
 
             TradeSearchResultData(
                 summarizedTradeList = tradeList,
                 currentQuery = currentQuery,
-                categoryList = categoryList
+                categoryList = categoryList,
+                campusList = campusList
             )
         }
 

@@ -9,6 +9,7 @@ import kr.linkerbell.campusmarket.android.domain.model.feature.admin.TradeReport
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.TradeReportDetail
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReport
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.UserReportDetail
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.Campus
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserProfile
 
 interface AdminRepository {
@@ -18,7 +19,9 @@ interface AdminRepository {
         minPrice: Int,
         maxPrice: Int,
         sorted: String,
-        itemStatus: String
+        itemStatus: String,
+        campusId: Long,
+        isDeleted: Boolean?
     ): Flow<PagingData<Trade>>
 
     fun getTradeReportList(
@@ -63,4 +66,6 @@ interface AdminRepository {
     ): Result<Unit>
 
     fun getUserProfileList(): Flow<PagingData<UserProfile>>
+
+    suspend fun getCampusList(): Result<List<Campus>>
 }

@@ -15,6 +15,8 @@ import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEve
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.asEventFlow
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Trade
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.error.ServerException
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.Campus
+import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.GetCampusListUseCase
 import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.SearchTradeUseCase
 import kr.linkerbell.campusmarket.android.presentation.common.base.BaseViewModel
 import kr.linkerbell.campusmarket.android.presentation.common.base.ErrorEvent
@@ -22,7 +24,8 @@ import kr.linkerbell.campusmarket.android.presentation.common.base.ErrorEvent
 @HiltViewModel
 class TradeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val searchTradeUseCase: SearchTradeUseCase
+    private val searchTradeUseCase: SearchTradeUseCase,
+    private val getCampusListUseCase: GetCampusListUseCase
 ) : BaseViewModel() {
 
     private val _state: MutableStateFlow<TradeScreenState> = MutableStateFlow(TradeScreenState.Init)
@@ -36,9 +39,25 @@ class TradeViewModel @Inject constructor(
     val summarizedTradeList: StateFlow<PagingData<Trade>> =
         _summarizedTradeList.asStateFlow()
 
+    private val _campusList: MutableStateFlow<List<Campus>> = MutableStateFlow(emptyList())
+    val campusList: StateFlow<List<Campus>> = _campusList.asStateFlow()
+
     init {
         launch {
-            searchTradeList()
+            getCampusListUseCase().onSuccess {
+                _campusList.value = listOf(Campus(-1, "전체")) + it
+            }.onFailure { exception ->
+                when (exception) {
+                    is ServerException -> {
+                        _errorEvent.emit(ErrorEvent.InvalidRequest(exception))
+                    }
+
+                    else -> {
+                        _errorEvent.emit(ErrorEvent.UnavailableServer(exception))
+                    }
+                }
+            }
+            searchTradeList(-1, "",null)
         }
     }
 
@@ -46,20 +65,30 @@ class TradeViewModel @Inject constructor(
         when (intent) {
             is TradeScreenIntent.RefreshNewTrades -> {
                 launch {
-                    searchTradeList()
+                    searchTradeList(
+                        campusId = intent.campus.id,
+                        itemStatus = intent.itemStatus,
+                        isDeleted = intent.isDeleted
+                    )
                 }
             }
         }
     }
 
-    private suspend fun searchTradeList() {
+    private suspend fun searchTradeList(
+        campusId: Long,
+        itemStatus: String,
+        isDeleted: Boolean?
+    ) {
         searchTradeUseCase(
             name = "",
             category = "",
             minPrice = 0,
             maxPrice = Int.MAX_VALUE,
             sorted = "",
-            itemStatus = ""
+            itemStatus = itemStatus,
+            campusId = campusId,
+            isDeleted = isDeleted
         )
             .cachedIn(viewModelScope)
             .catch { exception ->

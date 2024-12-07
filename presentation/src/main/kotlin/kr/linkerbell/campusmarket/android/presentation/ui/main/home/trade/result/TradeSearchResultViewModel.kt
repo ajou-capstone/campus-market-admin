@@ -16,6 +16,8 @@ import kr.linkerbell.campusmarket.android.common.util.coroutine.event.asEventFlo
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Trade
 import kr.linkerbell.campusmarket.android.domain.model.feature.trade.CategoryList
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.error.ServerException
+import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.Campus
+import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.GetCampusListUseCase
 import kr.linkerbell.campusmarket.android.domain.usecase.feature.admin.SearchTradeUseCase
 import kr.linkerbell.campusmarket.android.domain.usecase.feature.trade.GetCategoryListUseCase
 import kr.linkerbell.campusmarket.android.presentation.common.base.BaseViewModel
@@ -25,7 +27,8 @@ import kr.linkerbell.campusmarket.android.presentation.common.base.ErrorEvent
 class TradeSearchResultViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val searchTradeListUseCase: SearchTradeUseCase,
-    private val getCategoryListUseCase: GetCategoryListUseCase
+    private val getCategoryListUseCase: GetCategoryListUseCase,
+    private val getCampusListUseCase: GetCampusListUseCase
 ) : BaseViewModel() {
 
     private val _state: MutableStateFlow<TradeSearchResultState> =
@@ -48,6 +51,9 @@ class TradeSearchResultViewModel @Inject constructor(
         MutableStateFlow(TradeSearchQuery())
     val tradeSearchQuery: StateFlow<TradeSearchQuery> = _tradeSearchQuery.asStateFlow()
 
+    private val _campusList: MutableStateFlow<List<Campus>> = MutableStateFlow(emptyList())
+    val campusList: StateFlow<List<Campus>> = _campusList.asStateFlow()
+
     init {
         _tradeSearchQuery.value = TradeSearchQuery(
             name = savedStateHandle["name"] ?: "",
@@ -58,6 +64,19 @@ class TradeSearchResultViewModel @Inject constructor(
         )
         launch {
             getCategoryList()
+            getCampusListUseCase().onSuccess {
+                _campusList.value = listOf(Campus(-1, "전체")) + it
+            }.onFailure { exception ->
+                when (exception) {
+                    is ServerException -> {
+                        _errorEvent.emit(ErrorEvent.InvalidRequest(exception))
+                    }
+
+                    else -> {
+                        _errorEvent.emit(ErrorEvent.UnavailableServer(exception))
+                    }
+                }
+            }
             onUpdateQuery()
         }
     }
@@ -88,7 +107,9 @@ class TradeSearchResultViewModel @Inject constructor(
             minPrice = _tradeSearchQuery.value.minPrice,
             maxPrice = _tradeSearchQuery.value.maxPrice,
             sorted = _tradeSearchQuery.value.sorted,
-            itemStatus = _tradeSearchQuery.value.itemStatus
+            itemStatus = _tradeSearchQuery.value.itemStatus,
+            campusId = _tradeSearchQuery.value.campusId,
+            isDeleted = _tradeSearchQuery.value.isDeleted,
         )
             .cachedIn(viewModelScope)
             .catch { exception ->
