@@ -27,7 +27,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,10 +45,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.plus
+import kotlinx.datetime.LocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.eventObserve
 import kr.linkerbell.campusmarket.android.domain.model.feature.trade.TradeInfo
@@ -60,10 +62,12 @@ import kr.linkerbell.campusmarket.android.presentation.common.theme.Black
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue100
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue400
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Body1
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray50
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Caption2
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray600
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline2
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline3
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Space4
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
@@ -90,16 +94,27 @@ fun TradeInfoScreen(
     var isDeleteConfirmButtonVisible by remember { mutableStateOf(false) }
     var isFailedToFetchDataDialogVisible by remember { mutableStateOf(false) }
 
-    fun navigateToChatRoom(id: Long) {
-//        navController.navigate("${ChatConstant.ROUTE}/$id")
-    }
+    ConstraintLayout(
+        modifier = Modifier
+            .background(White)
+            .fillMaxSize()
+    ) {
+        val (topBar, contents, bottomBar) = createRefs()
 
-    Scaffold(
-        topBar = {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(topBar) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+        ) {
             TradeInfoTopBar(
-                isOwnerOfThisTrade = isOwnerOfThisTrade,
-                onNavigatePreviousScreenButton = { navController.safeNavigateUp() },
-                onReportOptionClicked = { }, //TODO(신고 페이지로 이동)
+                onNavigatePreviousScreenButton = {
+                    navController.safeNavigateUp()
+                },
+                onReportOptionClicked = {},
                 onDeleteArticleOptionClicked = {
                     isDeleteConfirmButtonVisible = true
                 },
@@ -113,28 +128,19 @@ fun TradeInfoScreen(
                     navController.safeNavigate(newRoute)
                 }
             )
-        },
-        bottomBar = {
-            TradeInfoBottomBar(
-                isLiked = tradeInfo.isLiked,
-                isOwnerOfThisTrade = isOwnerOfThisTrade,
-                isSold = tradeInfo.isSold,
-                price = tradeInfo.price,
-                onLikeButtonClick = {
-                    argument.intent(TradeInfoIntent.LikeButtonClicked)
-                },
-                onChatButtonClick = {
-                    argument.intent(TradeInfoIntent.OnTradeStart)
-                }
-            )
         }
-    ) { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
-                .background(Gray50)
+                .constrainAs(contents) {
+                    top.linkTo(topBar.bottom)
+                    bottom.linkTo(bottomBar.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
         ) {
             TradeInfoImageViewer(
                 thumbUrl = tradeInfo.thumbnail,
@@ -144,19 +150,30 @@ fun TradeInfoScreen(
                 authorInfo,
                 authorNickname = tradeInfo.nickname
             )
-            TradeInfoContent(
-                title = tradeInfo.title,
-                description = tradeInfo.description,
-                category = tradeInfo.category,
-                likeCount = tradeInfo.likeCount,
-                chatCount = tradeInfo.chatCount
+            TradeInfoContent(tradeInfo)
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(bottomBar) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }
+        ) {
+            TradeInfoBottomBar(
+                isLiked = tradeInfo.isLiked,
+                isSold = tradeInfo.isSold,
+                price = tradeInfo.price,
+                onLikeButtonClick = {
+                    argument.intent(TradeInfoIntent.LikeButtonClicked)
+                },
             )
         }
     }
 
     if (isDeleteConfirmButtonVisible) {
         DeleteConfirmDialog(
-            isOwnerOfThisTrade = isOwnerOfThisTrade,
             onConfirm = {
                 argument.intent(TradeInfoIntent.DeleteThisPost)
             },
@@ -177,7 +194,6 @@ fun TradeInfoScreen(
                 is TradeInfoEvent.NavigateToChatRoom -> {
                     if (isNewChatRoomAvailable) {
                         isNewChatRoomAvailable = false
-                        navigateToChatRoom(id = event.id)
                     }
                 }
 
@@ -191,7 +207,6 @@ fun TradeInfoScreen(
 
 @Composable
 private fun TradeInfoTopBar(
-    isOwnerOfThisTrade: Boolean,
     onNavigatePreviousScreenButton: () -> Unit,
     onReportOptionClicked: () -> Unit,
     onPatchArticleOptionClicked: () -> Unit,
@@ -378,49 +393,54 @@ private fun TradeInfoAuthor(
 
 @Composable
 private fun TradeInfoContent(
-    title: String,
-    description: String,
-    category: String,
-    likeCount: Int,
-    chatCount: Int
+    tradeInfo: TradeInfo
 ) {
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        val spacerPadding = 4.dp
+        Text(text = tradeInfo.title, color = Black, style = Headline2)
+        Spacer(Modifier.padding(Space4))
 
-        Text(text = title, color = Black, style = Headline2)
-        Spacer(Modifier.padding(spacerPadding))
+        Text(text = translateToKor(tradeInfo.category), color = Black, style = Body1)
+        Spacer(Modifier.padding(Space4))
 
-        Text(text = translateToKor(category), color = Black, style = Body1)
-        Spacer(Modifier.padding(spacerPadding))
+        Text(text = "${tradeInfo.likeCount} 명이 좋아함", color = Black, style = Body1)
+        Spacer(Modifier.padding(Space4))
 
-        Text(text = "$likeCount 명이 좋아함", color = Black, style = Body1)
-        Spacer(Modifier.padding(spacerPadding))
+        Text(text = "${tradeInfo.chatCount} 명이 대화중", color = Black, style = Body1)
+        Spacer(Modifier.padding(Space4))
 
-        Text(text = "$chatCount 명이 대화중", color = Black, style = Body1)
-        Spacer(Modifier.padding(spacerPadding))
+        Text(
+            text = creationOrModifiedDate(tradeInfo.createdDate, tradeInfo.lastModifiedDate),
+            color = Gray600,
+            style = Caption2
+        )
 
         HorizontalDivider(
             thickness = (0.4).dp,
-            color = Black
+            color = Gray900,
         )
 
-        Spacer(Modifier.padding(spacerPadding))
-        Text(text = description, color = Black, style = Body1)
+        Spacer(Modifier.padding(Space4))
+        Text(text = tradeInfo.description, color = Black, style = Body1)
     }
+}
+
+private fun creationOrModifiedDate(createdAt: LocalDateTime, modifiedAt: LocalDateTime): String {
+    return if (createdAt == modifiedAt)
+        "작성 일자 : ${createdAt.date}"
+    else
+        "최종 수정 일자 : ${modifiedAt.date}"
 }
 
 @Composable
 private fun TradeInfoBottomBar(
     isLiked: Boolean,
-    isOwnerOfThisTrade: Boolean,
     price: Int,
     isSold: Boolean,
     onLikeButtonClick: () -> Unit,
-    onChatButtonClick: () -> Unit,
 ) {
 
     val favIcon = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder
@@ -497,7 +517,6 @@ private fun translateToKor(engCategory: String): String {
 
 @Composable
 private fun DeleteConfirmDialog(
-    isOwnerOfThisTrade: Boolean,
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -567,7 +586,9 @@ private fun TradeInfoScreenPreview() {
                 likeCount = 20,
                 price = 15000,
                 isLiked = true,
-                isSold = false
+                isSold = true,
+                createdDate = LocalDateTime(2000, 1, 1, 0, 0, 0),
+                lastModifiedDate = LocalDateTime(2000, 2, 1, 0, 0, 0)
             ),
             userInfo = MyProfile.empty
         )

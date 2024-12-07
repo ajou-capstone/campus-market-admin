@@ -1,4 +1,4 @@
-package kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.search.result
+package kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.result
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,8 +22,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DropdownMenu
@@ -45,15 +42,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -63,18 +57,17 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.plus
+import kotlinx.datetime.LocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Trade
 import kr.linkerbell.campusmarket.android.domain.model.feature.trade.CategoryList
 import kr.linkerbell.campusmarket.android.presentation.R
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Black
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue100
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue200
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue400
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue500
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Body0
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Body1
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Caption2
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline3
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space20
@@ -86,8 +79,8 @@ import kr.linkerbell.campusmarket.android.presentation.common.util.compose.isEmp
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.safeNavigateUp
 import kr.linkerbell.campusmarket.android.presentation.common.view.RippleBox
-import kr.linkerbell.campusmarket.android.presentation.common.view.image.PostImage
 import kr.linkerbell.campusmarket.android.presentation.common.view.textfield.TypingTextField
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.common.TradeCard
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.info.TradeInfoConstant
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,6 +96,7 @@ fun TradeSearchResultScreen(
     var currentQuery by remember { mutableStateOf(data.currentQuery) }
     val categoryList = listOf("") + data.categoryList
     var isPriceFilterAvailable by remember { mutableStateOf(false) }
+    var isSoldItemVisibleChecked by remember { mutableStateOf(false) }
 
     val refreshState = rememberPullToRefreshState()
 
@@ -159,7 +153,31 @@ fun TradeSearchResultScreen(
                         )
                     }
                 }
-
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "거래 완료된 상품은 제외하기",
+                        style = Body1,
+                        color = Black
+                    )
+                    Checkbox(
+                        checked = isSoldItemVisibleChecked,
+                        onCheckedChange = {
+                            isSoldItemVisibleChecked = !isSoldItemVisibleChecked
+                            updateCurrentQuery(
+                                currentQuery.copy(
+                                    itemStatus =
+                                    if (isSoldItemVisibleChecked) "FORSALE" else ""
+                                )
+                            )
+                        },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Blue400,
+                            uncheckedColor = Gray900
+                        )
+                    )
+                }
             }
         }
         HorizontalDivider(
@@ -189,7 +207,7 @@ fun TradeSearchResultScreen(
                 .nestedScroll(refreshState.nestedScrollConnection)
         ) {
             LazyColumn(
-                contentPadding = PaddingValues(vertical = 16.dp, horizontal = 20.dp)
+                contentPadding = PaddingValues(vertical = 16.dp, horizontal = 16.dp)
             ) {
 
                 items(
@@ -197,7 +215,7 @@ fun TradeSearchResultScreen(
                     key = { index -> data.summarizedTradeList[index]?.itemId ?: -1 }
                 ) { index ->
                     val trade = data.summarizedTradeList[index] ?: return@items
-                    TradeSearchResultItemCard(
+                    TradeCard(
                         item = trade,
                         onItemCardClicked = {
                             val tradeInfoRoute = makeRoute(
@@ -597,110 +615,6 @@ private fun TradeSearchResultSortOption(
     }
 }
 
-@Composable
-private fun TradeSearchResultItemCard(
-    item: Trade,
-    onItemCardClicked: (Long) -> Unit
-) {
-    Box(
-        Modifier
-            .shadow(4.dp)
-            .clip(RoundedCornerShape(5.dp))
-            .clickable {
-                onItemCardClicked(item.itemId)
-            }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(8.dp),
-        ) {
-            PostImage(
-                data = item.thumbnail,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
-            Column(
-                modifier = Modifier.padding(start = 10.dp)
-            ) {
-                Text(
-                    text = item.title,
-                    style = Headline3,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                )
-
-                Text(
-                    text = item.nickname,
-                    style = Caption2,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                Text(
-                    text = "${item.chatCount} 명이 대화중",
-                    style = Caption2,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .widthIn(min = 100.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        TradeSearchResultItemStatus(
-                            isSold = item.itemStatus == "SOLDOUT"
-                        )
-                        Text(
-                            text = "${item.price} 원",
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(4.dp)
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.padding(start = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val favIcon =
-                            if (item.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder
-                        Icon(
-                            imageVector = favIcon,
-                            tint = Gray900,
-                            contentDescription = "isLike",
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Spacer(modifier = Modifier.padding(2.dp))
-                        Text(item.likeCount.toString())
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun TradeSearchResultItemStatus(isSold: Boolean) {
-    val backgroundColor = if (isSold) LightGray else Blue100
-    val text = if (isSold) "거래 완료" else "거래 가능"
-
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(5.dp))
-            .background(backgroundColor),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            style = Body1,
-            color = White,
-            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-        )
-    }
-}
-
 private fun translateToKor(engCategory: String): String {
     return when (engCategory) {
         "ELECTRONICS_IT" -> "전자기기/IT"
@@ -736,19 +650,40 @@ private fun TradeSearchResultScreenPreview() {
                 PagingData.from(
                     listOf(
                         Trade(
-                            itemId = 1L,
-                            userId = 1L,
-                            nickname = "유저22",
-                            thumbnail = "https://picsum.photos/200",
-                            title = "콜라 팝니다 근데_제목이_좀_길어서_이렇게_넘어가면_어케됨",
-                            price = 1000,
+                            campusId = 1L,
+                            campusRegion = "서울",
                             chatCount = 5,
-                            likeCount = 2,
-                            itemStatus = "",
                             isLiked = true,
-                            campusId = 4748,
-                            campusRegion = "auctor",
-                            universityName = "Sondra Baird",
+                            itemId = 1001L,
+                            itemStatus = "AVAILABLE",
+                            likeCount = 10,
+                            nickname = "홍길동",
+                            price = 15000,
+                            thumbnail = "https://example.com/thumbnail.jpg",
+                            title = "판매 중인 상품",
+                            universityName = "서울대학교",
+                            userId = 123L,
+                            createdDate = LocalDateTime(2000, 1, 1, 0, 0, 0),
+                            lastModifiedDate = LocalDateTime(2000, 1, 1, 0, 0, 0),
+                            isDeleted = false
+                        ),
+                        Trade(
+                            campusId = 1L,
+                            campusRegion = "서울",
+                            chatCount = 5,
+                            isLiked = true,
+                            itemId = 1002L,
+                            itemStatus = "SOLDOUT",
+                            likeCount = 10,
+                            nickname = "홍길동",
+                            price = 15000,
+                            thumbnail = "https://example.com/thumbnail.jpg",
+                            title = "판매 중인 상품",
+                            universityName = "서울대학교",
+                            userId = 123L,
+                            createdDate = LocalDateTime(2000, 1, 1, 0, 0, 0),
+                            lastModifiedDate = LocalDateTime(2000, 1, 1, 0, 0, 0),
+                            isDeleted = false
                         )
                     )
                 )

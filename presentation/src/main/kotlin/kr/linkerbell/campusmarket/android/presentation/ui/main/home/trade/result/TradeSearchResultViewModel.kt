@@ -1,4 +1,4 @@
-package kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.search.result
+package kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.result
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -87,7 +87,8 @@ class TradeSearchResultViewModel @Inject constructor(
             category = _tradeSearchQuery.value.category,
             minPrice = _tradeSearchQuery.value.minPrice,
             maxPrice = _tradeSearchQuery.value.maxPrice,
-            sorted = _tradeSearchQuery.value.sorted
+            sorted = _tradeSearchQuery.value.sorted,
+            itemStatus = _tradeSearchQuery.value.itemStatus
         )
             .cachedIn(viewModelScope)
             .catch { exception ->

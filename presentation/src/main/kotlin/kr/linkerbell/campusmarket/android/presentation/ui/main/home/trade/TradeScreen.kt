@@ -1,10 +1,8 @@
 package kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,15 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -29,13 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -49,15 +36,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.plus
+import kotlinx.datetime.LocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.Trade
 import kr.linkerbell.campusmarket.android.presentation.R
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue100
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Blue200
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Body1
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Caption2
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
-import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline3
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space20
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space24
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space56
@@ -66,8 +50,8 @@ import kr.linkerbell.campusmarket.android.presentation.common.util.compose.Error
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.makeRoute
 import kr.linkerbell.campusmarket.android.presentation.common.view.RippleBox
-import kr.linkerbell.campusmarket.android.presentation.common.view.image.PostImage
 import kr.linkerbell.campusmarket.android.presentation.common.view.textfield.TypingTextField
+import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.common.TradeCard
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.info.TradeInfoConstant
 import kr.linkerbell.campusmarket.android.presentation.ui.main.home.trade.search.TradeSearchConstant
 
@@ -121,7 +105,7 @@ private fun TradeScreen(
             .background(White)
             .fillMaxSize()
     ) {
-        val (topBar, contents, button) = createRefs()
+        val (topBar, contents) = createRefs()
 
         Box(
             modifier = Modifier
@@ -157,7 +141,7 @@ private fun TradeScreen(
                     key = { index -> data.summarizedTradeList[index]?.itemId ?: -1 }
                 ) { index ->
                     val trade = data.summarizedTradeList[index] ?: return@items
-                    TradeItemCard(
+                    TradeCard(
                         item = trade,
                         onItemCardClicked = {
                             val tradeInfoRoute = makeRoute(
@@ -190,90 +174,6 @@ private fun TradeScreen(
 
     LaunchedEffectWithLifecycle(coroutineContext) {
         argument.intent(TradeScreenIntent.RefreshNewTrades)
-    }
-}
-
-@Composable
-private fun TradeItemCard(
-    item: Trade,
-    onItemCardClicked: (Long) -> Unit
-) {
-    Box(
-        Modifier
-            .shadow(4.dp)
-            .clip(RoundedCornerShape(5.dp))
-            .clickable {
-                onItemCardClicked(item.itemId)
-            }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(8.dp),
-        ) {
-            PostImage(
-                data = item.thumbnail,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
-            Column(
-                modifier = Modifier.padding(start = 10.dp)
-            ) {
-                Text(
-                    text = item.title,
-                    style = Headline3,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                )
-
-                Text(
-                    text = item.nickname,
-                    style = Caption2,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                Text(
-                    text = "${item.chatCount} 명이 대화중",
-                    style = Caption2,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .widthIn(min = 100.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        TradeItemStatus(
-                            isSold = item.itemStatus == "SOLDOUT"
-                        )
-                        Text(
-                            text = "${item.price} 원",
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(4.dp)
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.padding(start = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val favIcon =
-                            if (item.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder
-                        Icon(
-                            imageVector = favIcon,
-                            tint = Gray900,
-                            contentDescription = "isLike",
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Spacer(modifier = Modifier.padding(2.dp))
-                        Text(item.likeCount.toString())
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -320,26 +220,6 @@ private fun TradeSearchBar(
     }
 }
 
-@Composable
-private fun TradeItemStatus(isSold: Boolean) {
-    val backgroundColor = if (isSold) LightGray else Blue100
-    val text = if (isSold) "거래 완료" else "거래 가능"
-
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(5.dp))
-            .background(backgroundColor),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            style = Body1,
-            color = White,
-            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-        )
-    }
-}
-
 @Preview
 @Composable
 private fun TradeScreenPreview() {
@@ -357,19 +237,22 @@ private fun TradeScreenPreview() {
                 PagingData.from(
                     listOf(
                         Trade(
-                            itemId = 1L,
-                            userId = 1L,
-                            nickname = "장성혁",
-                            thumbnail = "https://picsum.photos/200",
-                            title = "콜라 팝니다",
-                            price = 1000,
+                            campusId = 1L,
+                            campusRegion = "서울",
                             chatCount = 5,
-                            likeCount = 2,
-                            itemStatus = "",
                             isLiked = true,
-                            campusId = 1215,
-                            campusRegion = "luptatum",
-                            universityName = "Theresa Kaufman",
+                            itemId = 1001L,
+                            itemStatus = "AVAILABLE",
+                            likeCount = 10,
+                            nickname = "홍길동",
+                            price = 15000,
+                            thumbnail = "https://example.com/thumbnail.jpg",
+                            title = "판매 중인 상품",
+                            universityName = "서울대학교",
+                            userId = 123L,
+                            createdDate = LocalDateTime(2000, 1, 1, 0, 0, 0),
+                            lastModifiedDate = LocalDateTime(2000, 1, 1, 0, 0, 0),
+                            isDeleted = false
                         )
                     )
                 )

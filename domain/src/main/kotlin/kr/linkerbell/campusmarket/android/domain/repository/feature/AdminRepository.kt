@@ -17,7 +17,8 @@ interface AdminRepository {
         category: String,
         minPrice: Int,
         maxPrice: Int,
-        sorted: String
+        sorted: String,
+        itemStatus: String
     ): Flow<PagingData<Trade>>
 
     fun getTradeReportList(
