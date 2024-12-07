@@ -74,7 +74,7 @@ class UserApi @Inject constructor(
         page: Int,
         size: Int
     ): Result<UserReviewRes> {
-        return client.get("$baseUrl/api/v1/users/$userId/reviews") {
+        return client.get("$baseUrl/api/v1/users/$userId/reviews-to-me") {
             parameter("page", page.toString())
             parameter("size", size.toString())
         }.convert(errorMessageMapper::map)

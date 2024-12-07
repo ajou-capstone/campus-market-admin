@@ -51,10 +51,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.plus
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.RecentTrade
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserProfile
@@ -265,12 +262,7 @@ fun UserProfileScreen(
                         ) {
                             items(
                                 count = minOf(recentReview.itemCount, 3),
-                                key = { index ->
-                                    ("${recentReview[index]?.userId ?: -1}_${
-                                        recentReview[index]?.createdAt?.date ?: Clock.System.now()
-                                            .toLocalDateTime(TimeZone.currentSystemDefault())
-                                    }").hashCode()
-                                }
+                                key = { index -> recentReview[index]?.reviewId ?: -1 }
                             ) { index ->
                                 val review = recentReview[index] ?: return@items
                                 ReviewCard(review)
@@ -509,7 +501,7 @@ private fun UserProfileInfo(
                     tint = Blue400
                 )
                 Text(
-                    text = " (${String.format("%.1f",userProfile.rating)})",
+                    text = " (${String.format("%.1f", userProfile.rating)})",
                     style = Body1,
                     color = Black,
                 )
@@ -545,7 +537,7 @@ private fun OtherUserProfileScreenPreview() {
                 PagingData.from(
                     listOf(
                         UserReview(
-                            userId = 0L,
+                            reviewId = 0L,
                             nickname = "reviewer_1",
                             profileImage = "",
                             description = "좋아요",
@@ -553,7 +545,7 @@ private fun OtherUserProfileScreenPreview() {
                             createdAt = LocalDateTime(2024, 11, 22, 15, 30, 0)
                         ),
                         UserReview(
-                            userId = 1L,
+                            reviewId = 1L,
                             nickname = "reviewer_2",
                             profileImage = "",
                             description = "아주 좋아요",
