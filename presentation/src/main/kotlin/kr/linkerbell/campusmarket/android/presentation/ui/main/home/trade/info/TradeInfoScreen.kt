@@ -379,14 +379,27 @@ private fun TradeInfoAuthor(
                     .clip(RoundedCornerShape(8.dp))
                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
             )
-            Text(
-                text = authorNickname,
-                style = Headline3,
-                color = Black,
-                modifier = Modifier.padding(start = 8.dp)
-            )
+            Column {
+                Text(
+                    text = authorNickname,
+                    style = Headline3,
+                    color = Black,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+                Spacer(Modifier.height(Space4))
+                Text(
+                    text = authorInfo.campusName,
+                    modifier = Modifier.padding(start = 8.dp),
+                    color = Gray600,
+                    style = Caption2
+                )
+            }
         }
-        Text(text = "${String.format("%.1f",authorInfo.rating)} 점", color = Black, style = Headline3)
+        Text(
+            text = "${String.format("%.1f", authorInfo.rating)} 점",
+            color = Black,
+            style = Headline3
+        )
     }
 
 }

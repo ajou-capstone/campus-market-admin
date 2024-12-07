@@ -74,7 +74,7 @@ internal fun TradeCard(
                 maxLines = 1,
             )
             Text(
-                text = item.nickname,
+                text = "${item.nickname} (${item.universityName} ${item.campusRegion})",
                 style = Caption2,
                 color = Black
             )
