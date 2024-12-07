@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,10 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardDefaults.cardElevation
@@ -53,7 +50,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.plus
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.RecentTrade
 import kr.linkerbell.campusmarket.android.domain.model.nonfeature.user.UserProfile
@@ -70,7 +71,9 @@ import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray600
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Gray900
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline1
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Headline2
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Red400
 import kr.linkerbell.campusmarket.android.presentation.common.theme.Space56
+import kr.linkerbell.campusmarket.android.presentation.common.theme.Space8
 import kr.linkerbell.campusmarket.android.presentation.common.theme.White
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.LaunchedEffectWithLifecycle
 import kr.linkerbell.campusmarket.android.presentation.common.util.compose.isEmpty
@@ -100,7 +103,6 @@ fun UserProfileScreen(
         modifier = Modifier
             .background(White)
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
         val (topBar, contents) = createRefs()
         Row(
@@ -134,7 +136,7 @@ fun UserProfileScreen(
                 style = Headline2
             )
         }
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .constrainAs(contents) {
                     top.linkTo(topBar.bottom)
@@ -145,81 +147,82 @@ fun UserProfileScreen(
                     height = Dimension.fillToConstraints
                 }
         ) {
-            UserProfileInfo(userProfile = userprofile)
-            HorizontalDivider(
-                thickness = 1.dp,
-                color = Gray900,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
-            )
-            Column(
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+            item {
+                Column(
+                    modifier = Modifier.fillMaxHeight()
                 ) {
-                    Text(
-                        text = "최근 판매",
-                        style = Headline1,
-                        color = Black,
+                    UserProfileInfo(userProfile = userprofile)
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = Gray900,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
                     )
-                    Text(
-                        text = "더보기",
-                        style = Caption2,
-                        color = Gray600,
-                        modifier = Modifier.clickable {
-                            if (isNewScreenLoadingAvailable) {
-                                isNewScreenLoadingAvailable = false
-                                val newRoute = makeRoute(
-                                    route = RecentTradeConstant.ROUTE,
-                                    arguments = mapOf(
-                                        RecentTradeConstant.ROUTE_ARGUMENT_USER_ID to data.userProfile.id,
-                                    )
-                                )
-                                navController.safeNavigate(newRoute)
-                            }
-                        }
-                    )
-                }
-                Column {
-                    val recentTrades = data.recentTrades
-                    if (recentTrades.isEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
-                            text = "아직 판매중인 물건이 없어요",
+                            text = "최근 판매",
+                            style = Headline1,
+                            color = Black,
+                        )
+                        Text(
+                            text = "더보기",
                             style = Caption2,
                             color = Gray600,
-                            modifier = Modifier.padding(start = 8.dp, top = 8.dp)
-                        )
-                    } else {
-                        LazyColumn(
-                            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 16.dp)
-                        ) {
-                            items(
-                                count = minOf(recentTrades.itemCount, 3),
-                                key = { index -> recentTrades[index]?.id ?: -1 }
-                            ) { index ->
-                                val trade = recentTrades[index] ?: return@items
-                                TradeHistoryCard(
-                                    recentTrade = trade,
-                                    onClicked = {
-                                        val tradeInfoRoute = makeRoute(
-                                            route = TradeInfoConstant.ROUTE,
-                                            arguments = mapOf(
-                                                TradeInfoConstant.ROUTE_ARGUMENT_ITEM_ID
-                                                        to trade.id.toString()
-                                            )
+                            modifier = Modifier.clickable {
+                                if (isNewScreenLoadingAvailable) {
+                                    isNewScreenLoadingAvailable = false
+                                    val newRoute = makeRoute(
+                                        route = RecentTradeConstant.ROUTE,
+                                        arguments = mapOf(
+                                            RecentTradeConstant.ROUTE_ARGUMENT_USER_ID to data.userProfile.id,
                                         )
-                                        navController.navigate(tradeInfoRoute)
-                                    }
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
+                                    )
+                                    navController.safeNavigate(newRoute)
+                                }
                             }
-                        }
+                        )
                     }
                 }
+            }
+
+            val recentTrades = data.recentTrades
+            if (recentTrades.isEmpty()) {
+                item {
+                    Text(
+                        text = "아직 판매중인 물건이 없어요",
+                        style = Caption2,
+                        color = Gray600,
+                        modifier = Modifier.padding(start = 8.dp, top = 8.dp)
+                    )
+                }
+            } else {
+                items(
+                    count = minOf(recentTrades.itemCount, 3),
+                    key = { index -> "a" + (recentTrades[index]?.id ?: -1) }
+                ) { index ->
+                    val trade = recentTrades[index] ?: return@items
+                    TradeHistoryCard(
+                        recentTrade = trade,
+                        onClicked = {
+                            val tradeInfoRoute = makeRoute(
+                                route = TradeInfoConstant.ROUTE,
+                                arguments = mapOf(
+                                    TradeInfoConstant.ROUTE_ARGUMENT_ITEM_ID
+                                            to trade.id.toString()
+                                )
+                            )
+                            navController.navigate(tradeInfoRoute)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+            item {
                 Spacer(modifier = Modifier.padding(8.dp))
                 Row(
                     modifier = Modifier
@@ -251,32 +254,28 @@ fun UserProfileScreen(
                         }
                     )
                 }
-                Column {
-                    val recentReview = data.recentReviews
-                    if (recentReview.isEmpty()) {
-                        Text(
-                            text = "아직 작성된 리뷰가 없어요",
-                            style = Caption2,
-                            modifier = Modifier.padding(start = 8.dp, top = 8.dp)
-                        )
-                    } else {
-                        LazyColumn(
-                            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 16.dp)
-                        ) {
-                            items(
-                                count = minOf(recentReview.itemCount, 3),
-                                key = { index -> recentReview[index]?.reviewId ?: -1 }
-                            ) { index ->
-                                val review = recentReview[index] ?: return@items
-                                ReviewCard(review)
-                                HorizontalDivider(
-                                    thickness = 1.dp,
-                                    color = Gray200,
-                                    modifier = Modifier.padding(horizontal = 2.dp)
-                                )
-                            }
-                        }
-                    }
+            }
+            val recentReview = data.recentReviews
+            if (recentReview.isEmpty()) {
+                item {
+                    Text(
+                        text = "아직 작성된 리뷰가 없어요",
+                        style = Caption2,
+                        modifier = Modifier.padding(start = 8.dp, top = 8.dp)
+                    )
+                }
+            } else {
+                items(
+                    count = minOf(recentReview.itemCount, 3),
+                    key = { index -> "b" + (recentReview[index]?.reviewId ?: -1) }
+                ) { index ->
+                    val review = recentReview[index] ?: return@items
+                    ReviewCard(review)
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = Gray200,
+                        modifier = Modifier.padding(horizontal = 2.dp)
+                    )
                 }
             }
         }
@@ -493,7 +492,27 @@ private fun UserProfileInfo(
                 style = Headline1,
                 color = Black,
             )
-            Spacer(modifier = Modifier.padding(bottom = 8.dp))
+            Spacer(modifier = Modifier.height(Space8))
+            if (userProfile.campusName.isNotEmpty()) {
+                Text(
+                    text = userProfile.campusName,
+                    style = Body2,
+                    color = Gray600,
+                )
+                Spacer(modifier = Modifier.height(Space8))
+            }
+            userProfile.suspendedDate?.let { suspendedDate ->
+                val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                    .toInstant(TimeZone.currentSystemDefault())
+                val duration = (suspendedDate.toInstant(TimeZone.currentSystemDefault()) - now)
+                Text(
+                    text = "정지 중 (${duration.inWholeDays}일 ${duration.inWholeHours % 24}시간 남음)\n사유 : ${userProfile.suspendedReason}",
+                    style = Body2,
+                    color = Red400,
+                )
+                Spacer(modifier = Modifier.height(Space8))
+            }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -516,6 +535,7 @@ private fun UserProfileInfo(
 @Preview
 @Composable
 private fun OtherUserProfileScreenPreview() {
+    val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     UserProfileScreen(
         navController = rememberNavController(),
         argument = UserProfileArgument(
@@ -532,8 +552,8 @@ private fun OtherUserProfileScreenPreview() {
                 profileImage = "https://picsum.photos/200",
                 rating = 4.4,
                 isDeleted = false,
-                suspendedDate = null,
-                suspendedReason = "",
+                suspendedDate = LocalDateTime(now.year, now.month, now.dayOfMonth + 2, 0, 0, 0, 0),
+                suspendedReason = "이상 행동 발견",
                 campusName = "원주 캠퍼스"
             ),
             recentReviews = MutableStateFlow(
