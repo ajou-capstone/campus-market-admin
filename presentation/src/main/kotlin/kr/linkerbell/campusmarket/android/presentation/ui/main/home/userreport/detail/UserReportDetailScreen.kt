@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -215,6 +216,13 @@ fun UserReportDetailScreen(
         }
     }
 
+    LaunchedEffect(data.userReportDetail) {
+        if (data.userReportDetail.isSuspended) {
+            day = data.userReportDetail.suspendPeriod.toString()
+            description = data.userReportDetail.suspendReason
+        }
+    }
+
     LaunchedEffectWithLifecycle(event, coroutineContext) {
         event.eventObserve { event ->
             when (event) {
@@ -257,7 +265,10 @@ private fun UserReportDetailScreenPreview() {
                 isCompleted = false,
                 targetId = 8896,
                 userId = 4640,
-                userReportId = 1908
+                userReportId = 1908,
+                isSuspended = false,
+                suspendReason = "",
+                suspendPeriod = 0
             )
         )
     )

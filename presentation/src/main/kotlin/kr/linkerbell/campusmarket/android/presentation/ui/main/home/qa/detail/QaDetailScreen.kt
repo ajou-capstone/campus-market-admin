@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.plus
+import kotlinx.datetime.LocalDateTime
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.MutableEventFlow
 import kr.linkerbell.campusmarket.android.common.util.coroutine.event.eventObserve
 import kr.linkerbell.campusmarket.android.domain.model.feature.admin.QaDetail
@@ -169,6 +171,10 @@ fun QaDetailScreen(
         }
     }
 
+    LaunchedEffect(data.qaDetail) {
+        description = data.qaDetail.answerDescription
+    }
+
     LaunchedEffectWithLifecycle(event, coroutineContext) {
         event.eventObserve { event ->
             when (event) {
@@ -208,7 +214,9 @@ private fun QaDetailScreenPreview() {
                 isCompleted = false,
                 qaId = 5493,
                 title = "이거 이상해요.",
-                userId = 9830
+                userId = 9830,
+                answerDate = LocalDateTime(2022, 1, 1, 0, 0, 0, 0),
+                answerDescription = "이렇게 하세요."
             )
         )
     )

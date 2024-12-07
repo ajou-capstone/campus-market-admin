@@ -18,7 +18,13 @@ data class GetUserReportDetailRes(
     @SerialName("userId")
     val userId: Long,
     @SerialName("userReportId")
-    val userReportId: Long
+    val userReportId: Long,
+    @SerialName("isSuspended")
+    val isSuspended: Boolean = false,
+    @SerialName("suspendReason")
+    val suspendReason: String = "",
+    @SerialName("suspendPeriod")
+    val suspendPeriod: Int = -1
 ) : DataMapper<UserReportDetail> {
     override fun toDomain(): UserReportDetail {
         return UserReportDetail(
@@ -27,7 +33,10 @@ data class GetUserReportDetailRes(
             isCompleted = isCompleted,
             targetId = targetId,
             userId = userId,
-            userReportId = userReportId
+            userReportId = userReportId,
+            isSuspended = isSuspended,
+            suspendReason = suspendReason,
+            suspendPeriod = suspendPeriod
         )
     }
 }

@@ -6,7 +6,10 @@ data class UserReportDetail(
     val isCompleted: Boolean,
     val targetId: Long,
     val userId: Long,
-    val userReportId: Long
+    val userReportId: Long,
+    val isSuspended: Boolean,
+    val suspendReason: String,
+    val suspendPeriod: Int
 ) {
     companion object {
         val empty = UserReportDetail(
@@ -15,7 +18,10 @@ data class UserReportDetail(
             isCompleted = false,
             targetId = 0,
             userId = 0,
-            userReportId = 0
+            userReportId = 0,
+            isSuspended = false,
+            suspendReason = "",
+            suspendPeriod = 0
         )
     }
 }
