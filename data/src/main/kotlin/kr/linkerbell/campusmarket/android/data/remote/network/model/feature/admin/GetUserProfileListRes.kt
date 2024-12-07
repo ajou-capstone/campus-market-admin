@@ -27,11 +27,11 @@ data class GetUserProfileListItemRes(
     @SerialName("id")
     val id: Long,
     @SerialName("nickname")
-    val nickname: String,
+    val nickname: String = "",
     @SerialName("profileImage")
-    val profileImage: String,
+    val profileImage: String = "",
     @SerialName("rating")
-    val rating: Double,
+    val rating: Double = 0.0,
     @SerialName("isDeleted")
     val isDeleted: Boolean,
     @SerialName("suspendedDate")
@@ -39,7 +39,7 @@ data class GetUserProfileListItemRes(
     @SerialName("suspendedReason")
     val suspendedReason: String = "",
     @SerialName("campusName")
-    val campusName: String,
+    val campusName: String = "",
 ) : DataMapper<UserProfile> {
     override fun toDomain(): UserProfile {
         return UserProfile(

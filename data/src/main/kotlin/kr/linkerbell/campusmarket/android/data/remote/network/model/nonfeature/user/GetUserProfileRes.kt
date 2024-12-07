@@ -11,11 +11,11 @@ data class GetUserProfileRes(
     @SerialName("id")
     val id: Long,
     @SerialName("nickname")
-    val nickname: String,
+    val nickname: String = "",
     @SerialName("profileImage")
-    val profileImage: String,
+    val profileImage: String = "",
     @SerialName("rating")
-    val rating: Double,
+    val rating: Double = 0.0,
     @SerialName("isDeleted")
     val isDeleted: Boolean,
     @SerialName("suspendedDate")
