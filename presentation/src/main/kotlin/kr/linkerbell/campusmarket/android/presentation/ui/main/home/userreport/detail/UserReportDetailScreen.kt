@@ -102,7 +102,7 @@ fun UserReportDetailScreen(
                 )
             }
             Text(
-                text = "게시글 신고",
+                text = "사용자 신고",
                 style = Headline2.merge(Gray900),
                 modifier = Modifier
                     .padding(horizontal = Space20)

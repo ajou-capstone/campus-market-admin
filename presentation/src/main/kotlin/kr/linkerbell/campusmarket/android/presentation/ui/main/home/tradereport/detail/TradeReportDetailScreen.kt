@@ -99,7 +99,7 @@ fun TradeReportDetailScreen(
                 )
             }
             Text(
-                text = "게시글 신고",
+                text = "거래 신고",
                 style = Headline2.merge(Gray900),
                 modifier = Modifier
                     .padding(horizontal = Space20)
