@@ -509,7 +509,7 @@ private fun UserProfileInfo(
                     tint = Blue400
                 )
                 Text(
-                    text = " (${userProfile.rating}/10)",
+                    text = " (${String.format("%.1f",userProfile.rating)})",
                     style = Body1,
                     color = Black,
                 )
